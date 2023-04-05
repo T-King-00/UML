@@ -43,6 +43,7 @@ for i, sent in enumerate ( sentences ):
     for x in usecasess:
         actor.addUseCase(x)
 
+
     #if there is an actor saved . then add use case to it . if not append actor object that has use case list in it .
     foundActor = [ actorExtracted for actorExtracted in actors if actor.name == actorExtracted.name ]
     if foundActor.__len__()!= 0:
