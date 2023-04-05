@@ -35,28 +35,15 @@ sentences = helperFunctions.reduceSentences ( sentences )
 actorsList = UserStory.extractActors ( sentences )
 for actor in actorsList:
     pprint ( actor.name )
-
-
 actors = [ ]
+
+#for each sentence , get its actor and its use case . and put use case in actor's use case list
 for i, sent in enumerate ( sentences ):
-    # printtags ( sent )
-    #print ( i, "new sentence @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
-    x, actor = UserStory.extractUseCase ( sent )                        ##x is compoundVerbs
+    usecasess, actor = UserStory.extractUseCase ( sent )                        ##x is a use case
+    for x in usecasess:
+        actor.addUseCase(x)
 
-
-    # for c in x:
-    #     if isinstance ( c, spacy.tokens.Span ):
-    #         #print ( "c type : ", type ( c ) )
-    #         textvar = c [ 0: ].text
-    #         actor.addUseCase ( textvar )
-    #         #print ( actor.usecases )
-    #     elif isinstance ( c, str ):
-    #         #print ( "c type : ", type ( c ) )
-    #         textvar = c
-    #         actor.addUseCase ( textvar )
-    #         #print ( actor.usecases )
-    #
-    actor.addUseCase(x)
+    #if there is an actor saved . then add use case to it . if not append actor object that has use case list in it .
     foundActor = [ actorExtracted for actorExtracted in actors if actor.name == actorExtracted.name ]
     if foundActor.__len__()!= 0:
         index=-1
@@ -89,19 +76,20 @@ usecasemodel.addCustomMessage ( "left to right direction" )
 
 for actor in actors:
     #usecasemodel.addActor ( actor.name )
-    for usecaseobj in actor.usecases:
-        if usecaseobj!=[]:
-            usecasemodel.addUseCase ( usecaseobj )
-            usecasemodel.addUseCasetoActor ( actor.name, usecaseobj )
+    for usecasesobj in actor.usecases:
+        if usecasesobj!=[]:
+            if type(usecasesobj) == list:
+                for useCaseObj in usecasesobj:
+                    usecasemodel.addUseCase ( useCaseObj )
+                    usecasemodel.addUseCasetoActor ( actor.name, useCaseObj )
+            else :
+                usecasemodel.addUseCase ( usecasesobj )
+                usecasemodel.addUseCasetoActor ( actor.name, usecasesobj )
 
 usecasemodel.closeFile ()
 os.system ( "python -m plantuml " + filename )
 
 
 
-# for each actor get his use cases :
-def printtags(sent):
-    sent = helperFunctions.nlp ( sent )
-    for token in sent:
-        print ( "token:", token.text, "  token pos", token.pos_ )
+
 

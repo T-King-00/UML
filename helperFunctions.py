@@ -20,8 +20,6 @@ def custom_sentencizer(doc):
             # the parser to leave those tokens alone
             doc [ i + 1 ].is_sent_start = False
     return doc
-
-
 nlp = spacy.load ( "en_core_web_lg" )
 nlp.add_pipe ( "custom_sentencizer", before="parser" )  # Insert before the parser
 
@@ -143,6 +141,11 @@ def get_token_sentences(sentences):
         list.append(listOfTokens)
 
     return listOfTokens
+
+def printtags(sent):
+    sent = nlp ( sent )
+    for token in sent:
+        print ( "token:", token.text, "  token pos", token.pos_ )
 
 
 

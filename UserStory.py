@@ -37,6 +37,80 @@ class UserStory ():
 
         return actors
 
+
+    #extracts main use case of a sentence
+    def extractUseCase(sentence):
+        #helperFunctions.displayRender(sentence)
+        doc=helperFunctions.nlp(sentence)
+        actor = UserStory.extractActor ( sentence )
+        verb=None
+        usecases=[]
+        for sentence in doc.sents:
+            #if the root verb is want search for another the xcomp which is next to root.
+            if sentence.root.lemma_=="want":
+                for tok in doc:
+                    if tok.pos_=="VERB" and tok.dep_=="xcomp":
+                        verb=tok
+                        print ( "sentence xcomp verb", tok.lemma_ )
+                        continue
+            else :
+                print ( "sentence root", sentence.root )
+                verb = sentence.root;
+            #gets object , and then object dependents
+            object=spacy_utils.get_objects_of_verb(verb)
+            #if object is founnd , get dependents.
+            if object!=None:
+                object_dependents = [ token for token in object[0].subtree if token.i > object[0].i ]
+                object_dependents_Txt = [ token.text for token in object[0].subtree if token.i > object[0].i ]
+                print ("object dependents", object_dependents_Txt )
+                usecase=verb.text+" "+ object[0].text + " ".join(object_dependents_Txt)
+                print(usecase)
+                usecases.append(usecase)
+
+            #get verb dependents which can be  another use case .
+
+            #two cases : if there is object dependents , if not .
+
+
+            if len ( object_dependents ):
+                x=object_dependents.pop()
+                verb_dependents = [ token for token in verb.subtree if token.i > verb.i + 1 ]
+                verb_dependents_Txt = [ token.text for token in verb.subtree if token.i > verb.i + 1 ]
+                print("verb_dependents",verb_dependents_Txt)
+
+            else:
+                verb_dependents = [ token for token in verb.subtree if token.i > verb.i+1]
+                verb_dependents_Txt = [ token.text for token in verb.subtree if token.i > verb.i+1]
+                print ( "verb_dependents", verb_dependents_Txt )
+                WORDS=["after","depend on"]
+                if verb_dependents[0].dep_=="prep" and verb_dependents[0].pos_ == "ADP" and verb_dependents[0].text in WORDS:
+                    print(verb_dependents[0].text)
+                    dependents = [ token for token in verb.subtree if token.i > verb_dependents[0].i ]
+                    dependents_txt = [ token.text for token in verb.subtree if token.i > verb_dependents[0].i ]
+                    dependentsListAfterLem=[]
+                    for tok in dependents:
+                        if tok.is_space or tok.text==".":
+                            continue
+                        dependentsListAfterLem.append(tok.lemma_)
+                    usecase2=" ".join(dependentsListAfterLem)
+                    print(usecase2)
+                    usecases.append(usecase2)
+                    #get what comes after this dependent word .
+
+
+
+        return usecases,actor
+
+
+
+
+
+
+
+
+
+
+
     def extract_verb_and_prep_phrase(doc):
         root_verb = ''
         prep_phrase = ''
@@ -129,30 +203,4 @@ class UserStory ():
 
         return compoundVerbs, actor
 
-    def extractUseCase(sentence):
-        #helperFunctions.displayRender(sentence)
-        doc=helperFunctions.nlp(sentence)
-        actor = UserStory.extractActor ( sentence )
-        verb=None
-        for sentence in doc.sents:
-            #if the root verb is want search for another the xcomp which is next to root.
-            if sentence.root.lemma_=="want":
-                for tok in doc:
-                    if tok.pos_=="VERB" and tok.dep_=="xcomp":
-                        verb=tok
-                        print ( "sentence xcomp verb", tok.lemma_ )
-                        continue
-            else :
-                print ( "sentence root", sentence.root )
-                verb = sentence.root;
 
-            #gets object , and then object dependents
-            object=spacy_utils.get_objects_of_verb(verb)
-            #if object is founnd , get dependents.
-            if object!=None:
-                object_dependents = [ token.text for token in object[0].subtree if token.i > object[0].i ]
-                print ("object dependents", object_dependents )
-                usecase=verb.text+" "+ object[0].text+" " +" ".join(object_dependents)
-                print(usecase)
-
-            return usecase,actor
