@@ -1,3 +1,5 @@
+import re
+
 import numpy
 from transformers import pipeline
 
@@ -60,20 +62,28 @@ def ruleC1(sentence):
             possibleClasses.append ( token.lemma_ )
     return possibleClasses
 
+
 def findPossible_ClassFor_Att(att,classesFromFreq,ClassEntities):
     classifier = pipeline ( "zero-shot-classification",model="facebook/bart-large-mnli" )
     #pip install accelerate
-    result = classifier ( att+"is an attribute of ?", candidate_labels=[ classs for classs in classesFromFreq ], )
+    candidate_labels = [ classs for classs in classesFromFreq ]
+    for i,c in enumerate(classesFromFreq):
+        classesFromFreq[i]=c.title()
+
+    print(candidate_labels)
+    result = classifier ( att, candidate_labels=candidate_labels, )
     print(result[ 'labels' ])
     print ( result [ 'scores' ] )
     array = numpy.array ( result [ 'scores' ] )
     max_index_percentage = array.argmax ()
     label=result['labels'][max_index_percentage]
+    label=label.title()
     index=classesFromFreq.index(label)
     if not helperFunctions.isExists(att,ClassEntities [ index ].classAttributes):
-        ClassEntities [ index ].classAttributes.append(att)
+        if ClassEntities[index].className!=att:
+            ClassEntities [ index ].classAttributes.append(att)
+            print ( "class:", ClassEntities [ index ].className, " atts : ", ClassEntities [ index ].classAttributes )
 
-    print ("class:" ,ClassEntities[index].className," atts : ",ClassEntities [ index ].classAttributes )
 
 def isAttribute(att):
     business_env = [ "people","database", "record", "system", "information", "organization", "detail", "website", "computer" ]

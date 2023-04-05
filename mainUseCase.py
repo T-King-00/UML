@@ -37,34 +37,26 @@ for actor in actorsList:
     pprint ( actor.name )
 
 
-# for each actor get his use cases :
-
-# for each actor get his use cases :
-def printtags(sent):
-    sent = helperFunctions.nlp ( sent )
-    for token in sent:
-        print ( "token:", token.text, "  token pos", token.pos_ )
-
-
 actors = [ ]
 for i, sent in enumerate ( sentences ):
     # printtags ( sent )
     #print ( i, "new sentence @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     x, actor = UserStory.extractUseCase ( sent )                        ##x is compoundVerbs
-    #print ( type ( x ) )
-    #print ( actor.name )
 
-    for c in x:
-        if isinstance ( c, spacy.tokens.Span ):
-            #print ( "c type : ", type ( c ) )
-            textvar = c [ 0: ].text
-            actor.addUseCase ( textvar )
-            #print ( actor.usecases )
-        elif isinstance ( c, str ):
-            #print ( "c type : ", type ( c ) )
-            textvar = c
-            actor.addUseCase ( textvar )
-            #print ( actor.usecases )
+
+    # for c in x:
+    #     if isinstance ( c, spacy.tokens.Span ):
+    #         #print ( "c type : ", type ( c ) )
+    #         textvar = c [ 0: ].text
+    #         actor.addUseCase ( textvar )
+    #         #print ( actor.usecases )
+    #     elif isinstance ( c, str ):
+    #         #print ( "c type : ", type ( c ) )
+    #         textvar = c
+    #         actor.addUseCase ( textvar )
+    #         #print ( actor.usecases )
+    #
+    actor.addUseCase(x)
     foundActor = [ actorExtracted for actorExtracted in actors if actor.name == actorExtracted.name ]
     if foundActor.__len__()!= 0:
         index=-1
@@ -73,18 +65,14 @@ for i, sent in enumerate ( sentences ):
                 index=i
                 break
         actors[index].usecases.append ( actor.usecases )
+
     else:
         actors.append(actor)
-
-
-
-
 
 for actor in actors:
     print (actor.name)
     for actorusecase in actor.usecases:
         print(actorusecase)
-
 
 
 filename = "other/usecasediagram1111.txt"
@@ -99,16 +87,21 @@ os.system ( "pip install plantuml" )
 usecasemodel = plantUML.UseCaseModel ( filename )
 usecasemodel.addCustomMessage ( "left to right direction" )
 
-
 for actor in actors:
-
     #usecasemodel.addActor ( actor.name )
-
     for usecaseobj in actor.usecases:
         if usecaseobj!=[]:
             usecasemodel.addUseCase ( usecaseobj )
             usecasemodel.addUseCasetoActor ( actor.name, usecaseobj )
 
 usecasemodel.closeFile ()
-
 os.system ( "python -m plantuml " + filename )
+
+
+
+# for each actor get his use cases :
+def printtags(sent):
+    sent = helperFunctions.nlp ( sent )
+    for token in sent:
+        print ( "token:", token.text, "  token pos", token.pos_ )
+

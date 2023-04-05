@@ -1,0 +1,5 @@
+As a participant, I am shown a page telling me how to get learning credits after I complete the course so that I earn the credit I might have been interested in.
+As a participant, I can earn a certificate of completion by finishing a course so that I have proof that I completed a course.
+As a participant, I can earn a badge showing that I completed a course so that I can display that badge on my own website.
+As a participant, I am shown an evaluation form after completing a course so that I can tell FrontRowAgile.com what I think of their classes and their devilishly good-looking trainers.
+As a participant, I have a page I can link to and share with others that shows all the training courses I’ve completed so that people can see all the great stuff I’ve learned.

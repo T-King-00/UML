@@ -1,0 +1,6 @@
+As a user , i want to add items to cart so that i can check them out.
+As a user , i can view list of products for sale so that i can decide which products to buy.
+As a user, i can  delete products from cart so that i donot check them out.
+As a user , i can checkout products after paying by card.
+As a user, i can add my credit to pay so that order is completed.
+

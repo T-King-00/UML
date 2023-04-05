@@ -79,11 +79,16 @@ def preprocess(sentences):
 
     return sentences
 
-def getFile():
-    response = requests.get ( 'https://raw.githubusercontent.com/T-King-00/Gp-AutomationOfBaTasks/tony/university.txt' )
+def getFileByUrl(fileURL):
+    response = requests.get ( fileURL )
+    #response = requests.get ( 'https://raw.githubusercontent.com/T-King-00/uml29-3-2023/master/LibraryManagementSystem.txt' )
     file = response.text
     return file
 
+
+def getFile():
+    with open ( 'userStories/tet.txt',encoding= 'utf-8') as f:
+        return f.read()
 
 def getAllNouns(sentence):
     ##### nouns
