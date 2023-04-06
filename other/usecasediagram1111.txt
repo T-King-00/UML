@@ -1,0 +1,26 @@
+ @startuml 
+ left to right direction 
+ usecase "mark products" 
+ :admin: --> (mark products)
+ usecase "add product" 
+ :admin: --> (add product)
+ usecase "change detailsor price" 
+ :admin: --> (change detailsor price)
+ usecase "delete product" 
+ :admin: --> (delete product)
+ usecase "add products" 
+ :admin: --> (add products)
+ usecase "checkout products" 
+ :user: --> (checkout products)
+ (checkout products) .> (pay by card) : include 
+ usecase "pay by card" 
+ :user: --> (pay by card)
+ usecase "add itemsto cart" 
+ :user: --> (add itemsto cart)
+ usecase "view listof products for sale" 
+ :user: --> (view listof products for sale)
+ usecase "delete products" 
+ :user: --> (delete products)
+ usecase "add credit" 
+ :user: --> (add credit)
+ @enduml 

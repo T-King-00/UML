@@ -1,0 +1,60 @@
+As a participant, I do not want the site to shut down while I’m in the midst of a quiz or video so that my progress isn’t interrupted.
+As a participant, I can participate in a forum for a course so that I can discuss questions and topics with the instructor and other participants.
+As an instructor, I can post announcements to a project “home page” for a Scheduled Course so that I can tell participants about important thinks such as “I’m delayed in posting chapter 7.”.
+As a participant, I can read announcements from an instructor for a Scheduled Course so that I can keep up to date on news.
+As an instructor, I can create quizzes so that participants can assess their learning.
+As a participant, I can take a quiz as part of a course so that I can get feedback on how well I learned material in the previous video(s).
+As a participant, I see if I pass a quiz after I finish taking it so that I can get feedback on how well I learned material in the previous video(s).
+As an instructor, I want quiz responses stored in the database so that I can see how people are doing at various questions, perhaps so I can fix one that is worded poorly.
+As a participant, I can see which quizzes I’ve passed, not passed, or not yet taken when viewing the course outline so that I know which quizzes I need to take or possibly re-take.
+As a participant, I can leave a comment about a course so that I can tell the world what I think of it.
+As a participant, I want to receive feedback after each quiz question so that I can see if I got the question right or wrong.
+As a participant, I can navigate a quiz by submitting an answer or by pressing skip (forward) or back so that I can answer questions in a different order if I’d like.
+As a site visitor, I can read an FAQ so that all my questions are answered.As a participant, I can get answers via video rather than text so that I watch rather than read an answer
+As a search engine, I can view a site map so that all pages are indexed.
+As an instructor, I can view all feedback for a course when logged in so that I can see historical or aggregate data on my courses.
+As a participant, I can manage my account so that it reflects my current information.
+As a participant, I can view a list of all courses I’ve taken and the PDUs each earned me so that I have access to that historical information and don’t call someone instead.
+As an instructor, I can upload videos to be part of a course so that participants can watch those videos.
+As an instructor, I can create a quiz to include in a video course so that participants can take those quizzes to ensure they are learning
+As an instructor, I can properly sequence the elements of course so that I can assemble them into an amazing course.
+As an instructor, I indicate whether a discussion forum is part of a course so that I can add a forum to some but not all courses.
+As an instructor, I can indicate the schedule for a course so that prospective participants and participants can see what course elements will be presented each week and what they’ll be.
+As an instructor, I can set the publication date for course elements (for a scheduled course) so that items become available when I want and not sooner.
+As an instructor, I can add subtitles to any video so that it is more accessible.
+As an instructor, I can set the thumbnail image for each video so that the image is one I like rather than randomly selected.
+As a site owner, I want all videos to be watermarked with a Front Row Agile logo so that the videos are clearly from the Front Row Agile site.
+As a trainer, I can set the prices for my course so that I can make filthy lucre.
+As a trainer, I can set quantity thresholds and discounts so that I can offer lower prices for larger orders such as “buy three, get 10% off”.
+As a trainer, I can create discount codes I can give to people so that I can customise pricing.
+As a site visitor, I can put courses in my shopping cart so that I can purchase them and participate in (watch) them.
+As a site visitor, I can put one chapter of a course in my shopping cart so that I can purchase just a part of a course.
+As a site visitor, I can pay for the courses in my cart with a credit card so that I can purchase them and participate in (watch) them.
+As a site visitor, I can pay for the courses in my cart with PayPal so that I can purchase them and participate in (watch) them.
+As a buyer, I receive a receipt for any course I pay for so that I can prove I paid for it.
+As a participant, I can announce my participation in a course at various times to various social media sites so that I can tell others about what I’m doing.
+As a user, I can view the license terms before purchasing or subscribing so that I know what I’m getting.
+As a participant, I can sign up for a monthly or annual subscription so that I can take all courses .
+As a company, I can purchase multiple licenses so that I can manage course registrations for a group of people.
+As a company, I manage a set of course registrations so that I can control which employees in my company have access to which courses.
+As a company, I can purchase a site license so that everyone in my company can take the course.
+As a participant, I can re-watch any video so that I can make sure I understand it.
+As a participant, I want each course element (such as a video) marked as viewed after I view or complete it so that I can see which parts of a course I’ve completed.
+As a site visitor, I can view some videos for free so that I can decide if I want to buy the full course.
+As a participant, I can set a mode on the videos so that one begins as the previous one finishes so that I can watch without having to touch my keyboard, mouse or screen.
+As a participant, I am shown a page telling me how to get learning credits after I complete the course so that I earn the credit I might have been interested in.
+As a participant, I can earn a certificate of completion by finishing a course so that I have proof that I completed a course.
+As a participant, I can earn a badge showing that I completed a course so that I can display that badge on my own website.
+As an instructor, I can leave a comment about a sample video or the course so that I can respond to other comments.
+As an instructor, I can create a description of a course so that prospective participants can learn about it.
+As a site visitor, I can browse a catalog of all courses available so that I can pick the right one for me.
+As an instructor, I can maintain a bio about myself so that it is used on any course listing for which I’m the instructor.
+As a site visitor, I can view a detailed page about each course so that I can learn all about it.
+As a site visitor, I can see a list of other related courses when viewing a course so that I can see other courses I might be interested in.
+As a participant, I am shown an evaluation form after completing a course so that I can tell FrontRowAgile.com what I think of their classes and their devilishly good-looking trainers.
+As an instructor, I can opt into receiving an email of every course evaluation as it completed by a participant so that I get real-time feedback on my courses.
+As a site visitor, I can read a privacy policy so that I know what’s private.
+As a participant, I have a page I can link to and share with others that shows all the training courses I’ve completed so that people can see all the great stuff I’ve learned.
+As an instructor, I can export all feedback for a course to a CSV file so that I can perform more in-depth analysis.
+As a site visitor, I can sign up for a newsletter so that I get announcements about new courses and other information.
+As a site visitor, I see “Featured Products” on the home page so that I see the products the site most wants all visitors to see.

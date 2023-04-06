@@ -39,9 +39,10 @@ actors = [ ]
 
 #for each sentence , get its actor and its use case . and put use case in actor's use case list
 for i, sent in enumerate ( sentences ):
+    actor=None
     usecasess, actor = UserStory.extractUseCase ( sent )                        ##x is a use case
-    for x in usecasess:
-        actor.addUseCase(x)
+    # for x in usecasess:
+    #     actor.addUseCase(x)
 
 
     #if there is an actor saved . then add use case to it . if not append actor object that has use case list in it .
@@ -77,7 +78,7 @@ usecasemodel.addCustomMessage ( "left to right direction" )
 
 for actor in actors:
     #usecasemodel.addActor ( actor.name )
-    for usecasesobj in actor.usecases:
+    for i,usecasesobj in enumerate(actor.usecases):
         if usecasesobj!=[]:
             if type(usecasesobj) == list:
                 for useCaseObj in usecasesobj:
@@ -86,6 +87,10 @@ for actor in actors:
             else :
                 usecasemodel.addUseCase ( usecasesobj )
                 usecasemodel.addUseCasetoActor ( actor.name, usecasesobj )
+            for key in actor.dependencies.keys():
+                if key != None:
+                    if actor.usecases[ key ]==usecasesobj:
+                        usecasemodel.addUseCase2toUseCase1(usecasesobj,actor.usecases[actor.dependencies [ key ]] )
 
 usecasemodel.closeFile ()
 os.system ( "python -m plantuml " + filename )
