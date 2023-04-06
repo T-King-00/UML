@@ -1,3 +1,4 @@
+import re
 from pprint import pprint
 from textacy.spacier import utils as spacy_utils
 
@@ -89,7 +90,10 @@ class UserStory ():
         else:
             prepphrase=UserStory.extract_verb_and_prep_phrase(doc)
             if prepphrase!=None:
-                usecase=usecase +" " + prepphrase
+                if re.search ( prepphrase, usecase ):
+                    usecase = usecase
+                else :
+                    usecase=usecase +" " + prepphrase
             usecases.append ( usecase )
             actor.addUseCase ( usecase )
 
