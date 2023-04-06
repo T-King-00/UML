@@ -67,25 +67,31 @@ class UserStory ():
             object_dependents = [ token for token in object[0].subtree if token.i > object[0].i ]
             object_dependents_Txt = [ token.text for token in object[0].subtree if token.i > object[0].i ]
             print ("object dependents", object_dependents_Txt )
-            usecase=verb.text+" "+ object[0].text + " ".join(object_dependents_Txt)
+            if len(object_dependents):
+                usecase=verb.text+" "+ object[0].text + ' '+" ".join(object_dependents_Txt)
+            else:
+                usecase = verb.text + " " + object [ 0 ].text
         else :
             usecase = verb.text
 
-
-        UserStory.extract_verb_and_prep_phrase(doc)
-
+        print ( usecase )
 
 
-        print(usecase)
-        usecases.append(usecase)
-        actor.addUseCase(usecase)
-
-        # get verb dependents which can be  another use case .
-        usecase2=UserStory.extractDependencyUseCase (sentence,verb,object_dependents)
+            # get verb dependents which can be  another use case .
+        usecase2 = UserStory.extractDependencyUseCase ( sentence, verb, object_dependents )
         if usecase2 is not None:
-            usecases.append ( usecase2 )
-            actor.addUseCase ( usecase2 )
-            actor.addDependency ( usecase, usecase2 )
+                usecases.append ( usecase2 )
+                actor.addUseCase ( usecase2 )
+
+                usecases.append ( usecase )
+                actor.addUseCase ( usecase )
+                actor.addDependency ( usecase, usecase2 )
+        else:
+            prepphrase=UserStory.extract_verb_and_prep_phrase(doc)
+            if prepphrase!=None:
+                usecase=usecase +" " + prepphrase
+            usecases.append ( usecase )
+            actor.addUseCase ( usecase )
 
 
         return usecases,actor
@@ -139,24 +145,16 @@ class UserStory ():
                 root_verb = token.text
                 for k, tok in enumerate ( doc ):
                     if tok.i >= token.i:
-
-                        if tok.dep_ == 'prep':  # find the preposition
+                        WORDSDependency=["after","depend on"]
+                        if tok.dep_ == 'prep' and tok.pos_=="ADP" and tok.text not in WORDSDependency:  # find the preposition
                             # Traverse the subtree of the preposition to get the entire prepositional phrase
                             prep_tokens = [ t for t in tok.subtree ]
                             prep_phrase = ' '.join ( [ t.text for t in prep_tokens ] )
                             break
 
-                        if tok.dep_ == "prep" and tok.head.pos_ == "VERB":
-                            first_pp = tok.text
-                            for child in tok.children:
-                                if child.dep_ == "pobj":
-                                    first_pp += " " + child.text
 
-                        if tok.dep_ == "prep" and tok.head.pos_ != "VERB":
-                            prep2_tokens = [ t for t in tok.subtree ]
-                            second_pp = ' '.join ( [ t.text for t in prep2_tokens ] )
 
-        return  prep_phrase, first_pp, second_pp
+        return  prep_phrase
 
     def extractCase(sentence):
         UserStory.extractU ( sentence )
