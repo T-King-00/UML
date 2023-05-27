@@ -29,8 +29,10 @@ class UserStory ():
         return actorObj
 
     # recieves not processed sentences .
+    actors=[]
     def extractActors(sentences):
-        actors = [ ]
+        global actors
+        actors=[]
         for sentence in sentences:
             sentenceNlp = helperFunctions.nlp ( sentence )
             actorObj = UserStory.extractActor ( sentence )
@@ -43,9 +45,23 @@ class UserStory ():
 
     #extracts main use case of a sentence
     def extractUseCase(sentence):
+        global actors
         #helperFunctions.displayRender(sentence)
+
+
         doc=helperFunctions.nlp(sentence)
-        actor = UserStory.extractActor ( sentence )
+        actorName = UserStory.extractActor ( sentence )
+
+        foundActor = [ actorExtracted for actorExtracted in actors if actorName.name == actorExtracted.name ]
+        if foundActor.__len__ () != 0:
+            index = -1
+            for i, act in enumerate ( actors ):
+                if foundActor [ 0 ].name == act.name:
+                    index = i
+                    break
+
+
+
         verb=None
         usecases=[]
         for sentence in doc.sents:
@@ -61,10 +77,12 @@ class UserStory ():
                 verb = sentence.root;
 
         #gets object , and then object dependents
-        object=spacy_utils.get_objects_of_verb(verb)
+        object=""
+        if verb!=None:
+            object=spacy_utils.get_objects_of_verb(verb)
         #if object is founnd , get dependents.
 
-        if object is not None:
+        if len(object):
             object_dependents = [ token for token in object[0].subtree if token.i > object[0].i ]
             object_dependents_Txt = [ token.text for token in object[0].subtree if token.i > object[0].i ]
             print ("object dependents", object_dependents_Txt )
@@ -74,19 +92,21 @@ class UserStory ():
                 usecase = verb.text + " " + object [ 0 ].text
         else :
             usecase = verb.text
+            object_dependents=[]
+
 
         print ( usecase )
 
-
+        #write if condition for token after verb to see if it aftr or on or of or any other prepositions
             # get verb dependents which can be  another use case .
         usecase2 = UserStory.extractDependencyUseCase ( sentence, verb, object_dependents )
         if usecase2 is not None:
                 usecases.append ( usecase2 )
-                actor.addUseCase ( usecase2 )
+                actors[index].addUseCase ( usecase2 )
 
                 usecases.append ( usecase )
-                actor.addUseCase ( usecase )
-                actor.addDependency ( usecase, usecase2 )
+                actors[index].addUseCase ( usecase )
+                actors[index].addDependency ( usecase, usecase2 )
         else:
             prepphrase=UserStory.extract_verb_and_prep_phrase(doc)
             if prepphrase!=None:
@@ -95,10 +115,10 @@ class UserStory ():
                 else :
                     usecase=usecase +" " + prepphrase
             usecases.append ( usecase )
-            actor.addUseCase ( usecase )
+            actors[index].addUseCase ( usecase )
 
 
-        return usecases,actor
+        return usecases,actors[index]
 
 
 
@@ -112,23 +132,25 @@ class UserStory ():
                 print ( "verb_dependents", verb_dependents_Txt )
 
             else:
-                verb_dependents = [ token for token in verb.subtree if token.i > verb.i + 1 ]
-                verb_dependents_Txt = [ token.text for token in verb.subtree if token.i > verb.i + 1 ]
+                verb_dependents = [ token for token in verb.subtree if token.i > verb.i  ]
+                verb_dependents_Txt = [ token.text for token in verb.subtree if token.i > verb.i ]
                 print ( "verb_dependents", verb_dependents_Txt )
                 WORDS = [ "after", "depend on" ]
-                if verb_dependents [ 0 ].dep_ == "prep" and verb_dependents [ 0 ].pos_ == "ADP" and verb_dependents [
-                    0 ].text in WORDS:
-                    print ( verb_dependents [ 0 ].text )
-                    dependents = [ token for token in verb.subtree if token.i > verb_dependents [ 0 ].i ]
-                    dependents_txt = [ token.text for token in verb.subtree if token.i > verb_dependents [ 0 ].i ]
-                    dependentsListAfterLem = [ ]
-                    for tok in dependents:
-                        if tok.is_space or tok.text == ".":
-                            continue
-                        dependentsListAfterLem.append ( tok.lemma_ )
-                    usecase2 = " ".join ( dependentsListAfterLem )
-                    print ( usecase2 )
-                    return usecase2
+                if len(verb_dependents):
+                    for i,tok in enumerate(verb_dependents):
+                        if verb_dependents [ i ].dep_ == "prep" and verb_dependents [ i ].pos_ == "ADP" and verb_dependents [ i ].lemma_ in WORDS:
+
+                            print ( verb_dependents [ i ].text )
+                            dependents = [ token for token in verb.subtree if token.i > verb_dependents [ i ].i ]
+                            dependents_txt = [ token.text for token in verb.subtree if token.i > verb_dependents [ i ].i ]
+                            dependentsListAfterLem = [ ]
+                            for i,tok in  enumerate(dependents):
+                                if tok.is_space or tok.text == "." or (tok.text=="so" and dependents[i+1].text=="that"):
+                                    continue
+                                dependentsListAfterLem.append ( tok.lemma_ )
+                            usecase2 = " ".join ( dependentsListAfterLem )
+                            print ( usecase2 )
+                            return usecase2
 
                 # get what comes after this dependent word .
 

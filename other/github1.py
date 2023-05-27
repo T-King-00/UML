@@ -1,6 +1,4 @@
 import re
-
-
 class Rules:
     '''
     pos_ refers to the Universal POS Set

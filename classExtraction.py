@@ -5,12 +5,21 @@ from transformers import pipeline
 
 import helperFunctions
 from helperFunctions import isExists
+import re
+
 
 
 def extractClasses(sentence):
     sentence=helperFunctions.nlp(sentence)
     ruleC1(sentence)
-    return possibleClasses
+    text = 'datagy -- is. great!'
+    possibleClasses2=[]
+    for x in possibleClasses:
+
+        new_text = re.sub ( r"[^a-zA-Z0-9 ]", "", x )
+        possibleClasses2.append(new_text)
+
+    return possibleClasses2
 
 classEntities=[]
 possibleClasses=[]
@@ -23,12 +32,10 @@ def ruleC1(sentence):
         #skip actor , which is first noun
         if i==2:
             continue
-
         # Check if we need to skip the token
         if skip_next:
             skip_next = False
             continue
-
         if token.pos_=="NOUN":
             if isExists ( token.lemma_, possibleClasses ):
                 continue

@@ -1,26 +1,101 @@
  @startuml 
  left to right direction 
- usecase "add products" 
- :admin: --> (add products)
- usecase "mark products as out of stock" 
- :admin: --> (mark products as out of stock)
- usecase "add product to list of products" 
- :admin: --> (add product to list of products)
- usecase "change details or price" 
- :admin: --> (change details or price)
- usecase "delete product out of stock" 
- :admin: --> (delete product out of stock)
- usecase "pay by card" 
- :user: --> (pay by card)
- usecase "checkout products" 
- :user: --> (checkout products)
- (checkout products) .> (pay by card) : include 
- usecase "add items to cart" 
- :user: --> (add items to cart)
- usecase "view list of products for sale" 
- :user: --> (view list of products for sale)
- usecase "delete products from cart" 
- :user: --> (delete products from cart)
- usecase "add credit" 
- :user: --> (add credit)
+ usecase "set image for each video" 
+ :instructor: --> (set image for each video)
+ usecase "post announcements to a project   home page" 
+ :instructor: --> (post announcements to a project   home page)
+ usecase "create description of a course" 
+ :instructor: --> (create description of a course)
+ usecase "view feedback for a course when logged in so that I can see or data on my courses  
+" 
+ :instructor: --> (view feedback for a course when logged in so that I can see or data on my courses  
+)
+ usecase "upload videos of a course" 
+ :instructor: --> (upload videos of a course)
+ usecase "sequence elements of course" 
+ :instructor: --> (sequence elements of course)
+ usecase "indicate schedule for a course" 
+ :instructor: --> (indicate schedule for a course)
+ usecase "add subtitles to any video" 
+ :instructor: --> (add subtitles to any video)
+ usecase "leave comment about a sample video or the course" 
+ :instructor: --> (leave comment about a sample video or the course)
+ usecase "maintain bio about myself" 
+ :instructor: --> (maintain bio about myself)
+ usecase "opt into receiving an email of every course evaluation as it completed by a participant so that I get   time feedback on my courses  
+" 
+ :instructor: --> (opt into receiving an email of every course evaluation as it completed by a participant so that I get   time feedback on my courses  
+)
+ usecase "export feedback for a course to a CSV file" 
+ :instructor: --> (export feedback for a course to a CSV file)
+ usecase "participate in a forum" 
+ :participant: --> (participate in a forum)
+ usecase "announce participation in a course at times" 
+ :participant: --> (announce participation in a course at times)
+ usecase "take quiz as part of a course" 
+ :participant: --> (take quiz as part of a course)
+ usecase "see" 
+ :participant: --> (see)
+ usecase "leave comment about a course" 
+ :participant: --> (leave comment about a course)
+ usecase "get answers via video" 
+ :participant: --> (get answers via video)
+ usecase "re watch any video" 
+ :participant: --> (re watch any video)
+ (re watch any video) .> (get answers via video) : include 
+ usecase "navigate quiz by submitting an answer or by pressing skip   forward   or back" 
+ :participant: --> (navigate quiz by submitting an answer or by pressing skip   forward   or back)
+ usecase "manage account" 
+ :participant: --> (manage account)
+ usecase "view list of all courses I � ve taken and the PDUs each" 
+ :participant: --> (view list of all courses I � ve taken and the PDUs each)
+ usecase "sign for a or subscription" 
+ :participant: --> (sign for a or subscription)
+ usecase "set mode on the videos" 
+ :participant: --> (set mode on the videos)
+ usecase "been in  
+" 
+ :participant: --> (been in  
+)
+ usecase "complete a course that I can tell frontrowagilecom what I think of their class and their devilishly look trainer" 
+ :participant: --> (complete a course that I can tell frontrowagilecom what I think of their class and their devilishly look trainer)
+ usecase "shown form" 
+ :participant: --> (shown form)
+ (shown form) .> (complete a course that I can tell frontrowagilecom what I think of their class and their devilishly look trainer) : include 
+ usecase "have page I can link to and share with others that shows all the training courses I � ve completed so that people can see all the stuff I � ve learned  
+" 
+ :participant: --> (have page I can link to and share with others that shows all the training courses I � ve completed so that people can see all the stuff I � ve learned  
+)
+ usecase "read policy" 
+ :site visitor: --> (read policy)
+ usecase "put chapter of a course in my shopping cart" 
+ :site visitor: --> (put chapter of a course in my shopping cart)
+ usecase "pay for the courses in my cart" 
+ :site visitor: --> (pay for the courses in my cart)
+ usecase "view page about each course" 
+ :site visitor: --> (view page about each course)
+ usecase "browse catalog of all courses" 
+ :site visitor: --> (browse catalog of all courses)
+ usecase "see Products on the home page" 
+ :site visitor: --> (see Products on the home page)
+ usecase "sign for a newsletter" 
+ :site visitor: --> (sign for a newsletter)
+ usecase "view map" 
+ :search engine: --> (view map)
+ usecase "set thresholds and discounts for orders" 
+ :trainer: --> (set thresholds and discounts for orders)
+ usecase "create codes I can give to people so that I can customise pricing  
+" 
+ :trainer: --> (create codes I can give to people so that I can customise pricing  
+)
+ usecase "receive receipt for any course I pay for so that I can prove I paid for it" 
+ :buyer: --> (receive receipt for any course I pay for so that I can prove I paid for it)
+ usecase "view terms before purchasing or subscribing so that I know what I  m getting
+" 
+ :user: --> (view terms before purchasing or subscribing so that I know what I  m getting
+)
+ usecase "purchase license in my company" 
+ :company: --> (purchase license in my company)
+ usecase "manage set of course registrations" 
+ :company: --> (manage set of course registrations)
  @enduml 

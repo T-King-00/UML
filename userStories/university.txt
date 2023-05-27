@@ -1,4 +1,4 @@
-As a participant, I do not want the site to shut down while I’m in the midst of a quiz or video so that my progress isn’t interrupted.
+As an instructor, I can set the publication date for course elements (for a scheduled course) so that items become available when I want and not sooner.
 As a participant, I can participate in a forum for a course so that I can discuss questions and topics with the instructor and other participants.
 As an instructor, I can post announcements to a project “home page” for a Scheduled Course so that I can tell participants about important thinks such as “I’m delayed in posting chapter 7.”.
 As a participant, I can read announcements from an instructor for a Scheduled Course so that I can keep up to date on news.
@@ -20,7 +20,6 @@ As an instructor, I can create a quiz to include in a video course so that parti
 As an instructor, I can properly sequence the elements of course so that I can assemble them into an amazing course.
 As an instructor, I indicate whether a discussion forum is part of a course so that I can add a forum to some but not all courses.
 As an instructor, I can indicate the schedule for a course so that prospective participants and participants can see what course elements will be presented each week and what they’ll be.
-As an instructor, I can set the publication date for course elements (for a scheduled course) so that items become available when I want and not sooner.
 As an instructor, I can add subtitles to any video so that it is more accessible.
 As an instructor, I can set the thumbnail image for each video so that the image is one I like rather than randomly selected.
 As a site owner, I want all videos to be watermarked with a Front Row Agile logo so that the videos are clearly from the Front Row Agile site.

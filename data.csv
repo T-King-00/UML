@@ -1,0 +1,161 @@
+attribute,classes,user,music,employee,book,website,credit card,shopping cart,patient
+nick name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+user name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+full name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,1
+id,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,1,1,1
+email,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+password,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+ip address,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+birth date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,1
+mobile number,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+phone number,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+last login date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+user preferences,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+address,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,1
+subscription status,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+user role,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+contact information,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,1,0,0,0,0,0
+feedbacks,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+posts,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+profile picture,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+activity log,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+ads,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",1,0,0,0,0,0,0,0
+title,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+author,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+publisher,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+isbn,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+International Standard Book Number,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+publication date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+publication date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+number of pages,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+page count,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+format,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+cover image,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+genre,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+category,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+download url,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+shipping weight,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+edition,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+summary,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+description,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+synopsis,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+blurb,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+awards,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,1,0,0,0,0
+artist,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+title,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+release date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+duration,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+coverart,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+format music,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+song writer,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+lyrics,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+recording location,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+length,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+label,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+album,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+length,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+category,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+music video,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+fan feedback,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+play count,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+number of downloads,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+equipment used,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+licensing information,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+platform,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,1,0,0,0,0,0,0
+employee name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+employee full name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+job title,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+position,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+department of employee,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+department,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+manager of department,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+salary,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+compensation,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+employment status,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+employment type,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+hire date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+date of hiring,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+termination date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+performance metrics,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+benefits eligibility,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+work schedule,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+time off,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+training records,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+work location,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+contact information,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,1,0,0,0,0,0
+homepage,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+map,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+number of pages,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+url,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+title,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+keywords,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+content,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+site security,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+language,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+seo information,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+web analytics,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+responsiveness,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+terms of services,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+hosting provider,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+technology,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+domain name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+traffic behavior,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+uptime,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+cookie usage information,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+security certificate,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,1,0,0,0
+card number,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+card holder name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+expiration date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+cvv,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+card verification value ,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+issuer,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+card type,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+credit limit,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+balance,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+available credit,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+interest rate,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+rewards program,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+annual fee,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+apr,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+late payment fee,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+foreign transaction fee,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+status,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+card history,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+contactless payment,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+billing address,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+credit score,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,1,0,0
+total number of items,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+total price,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+description,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+items,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+products,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+discount,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+state,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+details,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+coupon,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+tax amount,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+discount amount,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+payment method,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+shipping address,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+billing address,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+is empty,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+is closed,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+notes,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+created date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+modified date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,1,0
+patient name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+gender,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+emergency contact name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+emergency contact phone,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+insurance provider,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+blood type,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+height cm,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+home visit requested,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+last visit date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+weight kg,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+doctor name,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+prescription history,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+discharge date,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+is alcoholic,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+is smoker,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1
+primary care physician,"['user', 'music','employee','book','website','credit card','shopping cart'  , 'patient' ]",0,0,0,0,0,0,0,1

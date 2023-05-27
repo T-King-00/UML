@@ -24,6 +24,7 @@ nlp = spacy.load ( "en_core_web_lg" )
 nlp.add_pipe ( "custom_sentencizer", before="parser" )  # Insert before the parser
 
 
+
 ##############################################################
 ###functions
 ##############################################################
@@ -57,7 +58,8 @@ def reduceSentences(original_sentences):
     for sentence in original_sentences:
         doc = nlp ( sentence )
         # Create a list of the parts of speech to remove
-        pos_to_remove = [ "DET", "ADJ" ]
+
+        pos_to_remove = [  "ADJ" ]
         # Create a list of the tokens that should be kept
         tokens_to_keep = [ token for token in doc if token.pos_ not in pos_to_remove ]
         # Join the remaining tokens into a simplified sentence
@@ -71,7 +73,7 @@ def preprocess(sentences):
         #remove all punctuations except , and '
         regex = r"[!\"#\$%&\\(\)\*\+-\./:;<=>\?@\[\\\]\^_`{\|}~”“]"
         # r'[^\w\s]'
-        sentences [ i ] = re.sub ( regex, "", sentence )  # Remove punctuation
+        sentences [ i ] = re.sub ( regex, '', sentence )  # Remove punctuation
         #sentences [ i ] = sentence.replace ( '\r\n', '' )  # Remove newline
         #print ( sentences [ 1 ] )
 
