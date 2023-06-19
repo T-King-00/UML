@@ -24,7 +24,7 @@ class model:
     corpus=None
     model_label_pwoerset=None
     def __int__(self):
-        print("in instructor ")
+        print("-> in constructor of multi label model ")
 
         self.convertTypes ()
         self.removeNoise ()

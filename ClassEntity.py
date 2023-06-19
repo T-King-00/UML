@@ -1,8 +1,8 @@
 
 
 class ClassEntity ():
-    className=None
-    def __init__(self, className):
+
+    def __init__(self,className):
         self.className=className
         self.classAttributes=[]
 

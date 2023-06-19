@@ -87,7 +87,7 @@ def getFileByUrl(fileURL):
 
 
 def getFile():
-    with open ( 'userStories/tet.txt',encoding= 'utf-8') as f:
+    with open ( 'userStories/text.txt',encoding= 'utf-8') as f:
         return f.read()
 
 def getAllNouns(sentence):

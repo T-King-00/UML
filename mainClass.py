@@ -11,18 +11,12 @@ format of user story . As a ..... , i want to , so that   ...... .
 5-drawing. (done)
 """
 import pickle
+from collections import OrderedDict
 from pprint import pprint
 from multilabelmodel import model
-import numpy
-from Cython import typeof
-from sklearn.feature_extraction.text import TfidfVectorizer
-from transformers import pipeline
-
-import classExtraction
 import helperFunctions
-from ClassEntity import ClassEntity
 from UserStory import UserStory
-from hellpingFiles import concept
+from other.classRules import Extraction
 
 
 
@@ -48,12 +42,39 @@ if __name__ == '__main__':
         sentence = sentencesPreprocessed [ i ] [ 0:v ]
         sentence=sentence+ " ."
         print(sentence)
-        possibleClassesForOneSentence=classExtraction.extractClasses(sentence)
-        for x in possibleClassesForOneSentence:
-            possibleClasses.append ( x ) if x not in possibleClasses else None
+        sentence=helperFunctions.nlp(sentence)
+        Extract=Extraction()
+        isClass1=Extract.C1( sentence )
+        isClass2=Extract.C2( sentence )
+        isClass3=Extract.C3( sentence )
+        isClass4=Extract.C4( sentence )
+        isClass5=Extract.C5( sentence )
+
+
+        token1, isClass1 = Extract.A1 ( sentence )
+        token2, isClass2 = Extract.A2 ( sentence )
+        token3, isClass3 = Extract.A3 ( sentence )
+        token4, isClass4 = Extract.A4 ( sentence )
+        token5, isClass5 = Extract.A5 ( sentence )
+        token6, isClass6 = Extract.A6 ( sentence )
+        token7, isClass7 = Extract.A7 ( sentence )
 
 
 
+
+
+    possibleClasses=Extraction.possibleClasses
+    possibleClasses=list(dict.fromkeys(possibleClasses))
+    print("possible classses ############")
+
+    for classObj in possibleClasses:
+        print(classObj)
+
+    possibleAttributes = Extraction.possibleAttributes
+    print ( "possible attributes ############" )
+
+    for attObj in     possibleAttributes:
+        print(attObj)
 
 
 

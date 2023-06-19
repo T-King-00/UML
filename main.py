@@ -12,9 +12,6 @@ format of user story . As a ..... , i want to , so that   ...... .
 """
 from pprint import pprint
 
-import numpy
-from transformers import pipeline
-
 import classExtraction
 import helperFunctions
 from ClassEntity import ClassEntity
@@ -49,7 +46,7 @@ if __name__ == '__main__':
         sentence=sentence+ " ."
         attributes = [ ]
         x=sentence
-        pclasses=classExtraction.extractClasses(x)
+        pclasses= classExtraction.extractClasses( x )
 
         tokensOffAllSentences=helperFunctions.get_token_sentences(sentences1)
         sentence=helperFunctions.nlp(sentence)
@@ -71,7 +68,7 @@ if __name__ == '__main__':
         for word in pclasses:
             #if doesnt exits then its an attribute
             if not helperFunctions.isExists(word,classesFromFreq):
-                if classExtraction.isAttribute(word):
+                if classExtraction.isAttribute( word ):
                     attributes.append(word)
         #if not found in main classes due to frequency . then its an attribute .
         #helperFunctions.displayRender ( x )

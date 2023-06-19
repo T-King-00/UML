@@ -1,0 +1,11 @@
+System shall be able to find books and manage books.
+System has users and librarians.
+User should be able to  Search for the required books .
+Use can login in the system.
+User can reserve a book .
+User should be able to Add new book to the database.
+User can search for books based on title, publication date, author, etc., and find their location in the library.
+librarian can add and remove new members.
+Librarian can add and manage the books.
+The system should notify the user and librarian about the overdue books.
+The system calculates the fine for overdue books on their return.
