@@ -61,7 +61,7 @@ def ruleC1(sentence):
         #         continue
         # # Check if the next token is a noun
         #     if sentence [ i + 1 ].pos_ == "NOUN":
-        #         possibleClasses.append ( token.text + '_' + sentence [ i + 1 ].lemma_ )
+        #         possibleClasses.append ( token.text.txt + '_' + sentence [ i + 1 ].lemma_ )
         #         skip_next = True  # Skip the next token
         if token.dep_=="dobj":
             if isExists ( token.lemma_, possibleClasses ):

@@ -21,8 +21,8 @@ def custom_sentencizer(doc):
             doc [ i + 1 ].is_sent_start = False
     return doc
 nlp = spacy.load ( "en_core_web_lg" )
-nlp.add_pipe ( "custom_sentencizer", before="parser" )  # Insert before the parser
-
+#nlp.add_pipe ( "custom_sentencizer", before="parser" )  # Insert before the parser
+stopwords = nlp.Defaults.stop_words
 
 
 ##############################################################
@@ -73,8 +73,9 @@ def preprocess(sentences):
         #remove all punctuations except , and '
         regex = r"[!\"#\$%&\\(\)\*\+-\./:;<=>\?@\[\\\]\^_`{\|}~”“]"
         # r'[^\w\s]'
-        sentences [ i ] = re.sub ( regex, '', sentence )  # Remove punctuation
-        #sentences [ i ] = sentence.replace ( '\r\n', '' )  # Remove newline
+
+        sentences [ i ] = re.sub( regex, '', sentence )  # Remove punctuation
+        sentences [ i ] = sentence.replace ( '\n', '' )  # Remove newline
         #print ( sentences [ 1 ] )
 
     return sentences
@@ -96,7 +97,7 @@ def getAllNouns(sentence):
 
     objNlp = nlp ( sentence )
 
-    ### to remove them from chuck.text
+    ### to remove them from chuck.text.txt
     PRONOUNS = [ "it", "she", "he", "they", "them", "these", "i" ]
     ### this part get compound nouns
     for i, chunk in enumerate ( objNlp.noun_chunks ):

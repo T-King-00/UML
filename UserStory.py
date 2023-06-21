@@ -227,7 +227,7 @@ class UserStory ():
        #      string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
        #      span = x [ start:end ]  # The matched span
        #      if string_id == "verb-want-noun":
-       #          if span [ 0 ].text == "want" and span [ 1 ].pos_ == "NOUN":
+       #          if span [ 0 ].text.txt == "want" and span [ 1 ].pos_ == "NOUN":
        #              continue
        #      if string_id == "verbPhrase2":
        #          verb4 = span [ 4 ].lemma_

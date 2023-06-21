@@ -46,6 +46,9 @@ def parser(sentences):
                 conceptList.append ( chunk.text )
             else:
                 continue
+
+
+
     # remove dublicates
     conceptList = list ( dict.fromkeys ( conceptList ) )
     noun_phrases = list ( dict.fromkeys ( noun_phrases ) )
@@ -101,7 +104,7 @@ def getClassesFromFrequency(sentences):
         freq = wordsinDoc [ key ] / countOfWords
         WORDSNOTCLASS=["organization","system","able","date","number","database", "record", "information", "detail", "website", "computer","type", "number", "date", "reference","no","code","volume","birth","id","address","name","list"]
         frequency [ key ] = freq
-        if frequency [ key ] >= 0.02:
+        if frequency [ key ] >= 0.05:
             keyNlp = helperFunctions.nlp ( key )
             for doc in keyNlp:
                 if doc.pos_ != "VERB" and doc.text not in WORDSNOTCLASS:
