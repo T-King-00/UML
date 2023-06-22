@@ -1,18 +1,14 @@
 import regex
-
 import helperFunctions
-
 import nltk
 from nltk.corpus import wordnet
 
 # sentencesAfterRemovingstopwords
 sentencesWithoutSW = {}
 stopwordsList = [ ]
-
 tokens = [ ]
 conceptList = [ ]
 noun_phrases = [ ]
-
 stopwordsFound = [ ]
 
 
@@ -23,10 +19,12 @@ def getStopWords(sentence):
     for token in sentence:
         if token.is_stop:
             stopwordsFound.append ( token.lower_ )
-
     return stopwordsFound
 
-word_frequencies={}
+
+word_frequencies = {}
+
+
 # step 2
 def calculate_word_frequencies(sentences):
     global word_frequencies
@@ -34,18 +32,20 @@ def calculate_word_frequencies(sentences):
     wordsCountInAllSent = {}
     # Initializing the dictionary with zero values
     for word in conceptList:
-             wordsCountInAllSent [ word ] = 0
+        wordsCountInAllSent [ word ] = 0
 
-    for key in   sentences.keys():
+    for key in sentences.keys ():
         # Count the occurrences of each word
-        for word in sentences[key]:
-            word=helperFunctions.nlp(word)
-            wordsCountInAllSent [ word.text ] =  wordsCountInAllSent [  word.text ]+1
+        for word in sentences [ key ]:
+            word = helperFunctions.nlp ( word )
+            if word.text in sentences.values ():
+                wordsCountInAllSent [ word.text ] = wordsCountInAllSent [ word.text ] + 1
 
     print ( wordsCountInAllSent )
     print ( wordsCountInAllSent.values () )
     # Calculate the frequency of each word
-    word_frequencies = {key: wordsCountInAllSent [ key ] / len ( sentences.keys() ) for key in wordsCountInAllSent.keys ()}
+    word_frequencies = {key: wordsCountInAllSent [ key ] / len ( sentences.keys () ) for key in
+                        wordsCountInAllSent.keys ()}
     return word_frequencies
 
 
@@ -62,7 +62,6 @@ def parsingWholeDocument(sentences):
     global tokens
     for sent in sentences:
         sent = helperFunctions.nlp ( sent )
-
         for word in sent:
             tokens.append ( word )
     return tokens
@@ -72,7 +71,7 @@ def extractNounsVerbs(tokens):
     nounsAndVerbs = [ ]
     for doc in tokens:
         # extract proper nouns and verb
-        if doc.pos_ == "PROPN" or doc.pos_ == "VERB":
+        if doc.pos_ == "NOUN" or doc.pos_ == "VERB":
             text = doc.lemma_
             nounsAndVerbs.append ( text.lower () )
     return nounsAndVerbs
@@ -95,8 +94,6 @@ def generateSentencesFreeFromStopWords(sentences):
         stopwordsFound = getStopWords ( sent )
 
         sentenceAfterRemovingSW = [ ]
-        print ( "ORIGINAL SENTENCE " )
-        print ( sent.text )
 
         for obj in sent:
             if obj.lower_ == ".":
@@ -110,10 +107,7 @@ def generateSentencesFreeFromStopWords(sentences):
                 if obj.lower_ not in sentenceAfterRemovingSW:
                     sentenceAfterRemovingSW.append ( obj.lower_ )
         # after
-        print ( "SENTENCE AFTER REMOVING SW #######" )
-        print ( sentenceAfterRemovingSW )
         sentencesWithoutSW [ i ] = sentenceAfterRemovingSW
-        print ( "***************************" )
 
 
 nounsAndVerbs = [ ]
@@ -145,8 +139,9 @@ def extractPhrasesWithoutSW():
 
 
 # step 9
-
 generalizationList = {}
+
+
 def findGeneralization():
     wordsSynonyms = {}
     wordshyponyms = {}
@@ -158,7 +153,7 @@ def findGeneralization():
         for stn in wordnet.synsets ( concept ):
             for l in stn.lemmas ():
                 stringobj = l.name ()
-                stringobj=helperFunctions.nlp(stringobj)
+                stringobj = helperFunctions.nlp ( stringobj )
                 for doc in stringobj:
                     varobj = ""
                     i = 0
@@ -173,9 +168,9 @@ def findGeneralization():
 
                             else:
                                 if doc.pos_ == "PROPN":
-                                    varobj += "_"+doc.lemma_.lower ()
+                                    varobj += "_" + doc.lemma_.lower ()
                                 else:
-                                    varobj +="_"+ doc.text.lower ()
+                                    varobj += "_" + doc.text.lower ()
                     synonums.append ( varobj )
             wordsSynonyms [ concept ] = synonums
             for l in stn.hyponyms ():
@@ -198,49 +193,61 @@ def findGeneralization():
     print ( "synonyms of ", conceptList [ 1 ], wordsSynonyms [ conceptList [ 1 ] ] )
     print ( "hypo of ", conceptList [ 1 ], wordshyponyms [ conceptList [ 1 ] ] )
 
-
-
     # words having is a relationship
     for outIndex, ct1 in enumerate ( conceptList ):
-        print ( "ct1:", ct1 )
         for inIndex, ct2 in enumerate ( conceptList ):
-            print ( "           ct2:",ct2 )
             if ct2 == ct1:
                 continue
             try:
-                if ct2 in wordsSynonyms[ct1]:
-                    generalizationList[ct1]=ct2
+                if ct2 in wordsSynonyms [ ct1 ]:
+                    generalizationList [ ct1 ] = ct2
+                    try:
+                        if ct1 == generalizationList [ ct2 ]:
+                            del generalizationList [ ct1 ]
+                    except:
+                        print ( "not found key in generalizationList in condition if 2 " )
             except:
-                print("not found key in words synonyms")
+                print ( "not found key in words synonyms" )
+
+    print ( "generalization list", len ( generalizationList.items () ) )
 
 
-    print ( "generalization list", generalizationList )
+def preprocess(text):
+    if not text.endswith ( "." ):
+        text += "."
+    doc = helperFunctions.nlp ( text )
+    for token in doc:
+        # check for compound words
+        if token.text == ",":
+            text = text.replace ( token.text, " and " )
+        if token.dep_ == "compound":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+        # check for gerund followed by a noun
+        if token.pos_ == "VERB" and token.tag_ == "VBG" and token.head.pos_ == "NOUN":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+        # check if a noun is followed by a gerund
+        if token.pos_ == "NOUN" and token.head.pos_ == "VERB" and token.head.tag_ == "VBG":
+            text = text.replace ( token.head.text + " " + token.text, token.head.text + "_" + token.text )
+        # check for adjectives followed by a noun
+        if token.pos_ == "ADJ" and token.head.pos_ == "NOUN":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+    return text
 
 
-#class identification rules
+# class identification rules
+def crule2():
+    specific_indicators = {"type", "number", "date", "reference","no","code","volume","birth","id","address","name"}
+    business_env = ["database", "record", "information", "organization", "detail", "website", "computer"]
+    for concept in conceptList:
+        if concept in business_env:
+            conceptList.remove(concept)
+        conceptnlp=helperFunctions.nlp(concept)
+        for ent in conceptnlp.ents:
+            if ent.text in conceptList:
+                conceptList.remove ( ent.text )
+        if concept in specific_indicators:
+            conceptList.remove(concept)
+    print("concept list after filtering to extract classes : " , conceptList)
 
-def crule1():
-    conceptList2=[]
-    for nounphrase in noun_phrases:
-        np = helperFunctions.nlp ( nounphrase )
-        stringNP = ""
-        i = 0
-        for doc in np:
-            if not doc.is_stop and not doc.is_space:
-                i += 1
-                if i == 1:
-                    if doc.pos_ == "PROPN" or doc.pos_ == "NOUN":
-                        stringNP += doc.text.lower ()
-                    else:
-                        stringNP += doc.text.lower ()
-                else:
-
-                    if doc.pos_ == "PROPN" or doc.pos_ == "NOUN":
-                        stringNP += "_" + doc.text .lower()
-                    else:
-                        stringNP += "_" + doc.text.lower ()
-
-        conceptList2.append ( stringNP )
-        conceptList2 = list ( dict.fromkeys ( conceptList2 ) )
 
 

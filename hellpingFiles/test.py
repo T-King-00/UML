@@ -1,9 +1,3 @@
-list=["tony","ah","sf","tony"]
-print(list)
+import helperFunctions
 
-
-result = []
-
-[result.append(x) for x in list if x not in result]
-
-print(result)
+helperFunctions.displayRender("Tony can search for books based on title, date of publication  , author ")

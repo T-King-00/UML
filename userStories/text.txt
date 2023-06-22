@@ -1,10 +1,12 @@
+I live in Egypt . My name is John.
 System shall be able to find books and manage books.
+books include bible and other type of religous books.
 System has users and librarians.
-User should be able to  Search for the required books .
+User should be able to  search for the required books .
 User can login in the system.
 User can reserve a book .
-User should be able to Add new book to the database.
-User can search for books based on title, publication date, author and find their location in the library.
+User should be able to add new book to the database.
+User can search for books based on title, date of publication  , author , find their location in the library.
 librarian can add and remove new users.
 Librarian can add and manage the books.
 The system should notify the user and librarian about the overdue books.
