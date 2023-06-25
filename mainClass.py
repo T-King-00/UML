@@ -136,6 +136,11 @@ if __name__ == '__main__':
         if classEntity.className in algorithm.attributes.keys():
             for x in algorithm.attributes [ classEntity.className ]:
                 classEntity.addAttributeToClass ( x )
+        for key in algorithm.attributes.keys():
+            if key not in algorithm.classes:
+                classModel.addClass ( key )
+                for att in algorithm.attributes[key]:
+                    classModel.addMorFtoClass ( key, att, '+' )
 
         classModel.addClass ( classEntity.className )
         for att in classEntity.classAttributes:
