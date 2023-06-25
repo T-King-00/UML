@@ -82,7 +82,7 @@ def preprocess(sentences):
 
 def getFileByUrl(fileURL):
     response = requests.get ( fileURL )
-    #response = requests.get ( 'https://raw.githubusercontent.com/T-King-00/uml29-3-2023/master/LibraryManagementSystem.txt' )
+    #response = requests.get ( 'https://firebasestorage.googleapis.com/v0/b/ba-automation-5a4ae.appspot.com/o/users%2FKirolos_HigzIsPL2vemKLC2dw8jTlTpe8V2%2FLMS_0zEUkbpROXoSmlK5tohe%2Ffiles%2Funiversity.txt_88f0510b-84f6-45b7-b9d1-1ec1f1fd1eb9?alt=media&token=843185f7-2047-4d9a-83fc-6ecfca519d73' )
     file = response.text
     return file
 

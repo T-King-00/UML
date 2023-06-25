@@ -47,8 +47,6 @@ class UserStory ():
     def extractUseCase(sentence):
         global actors
         #helperFunctions.displayRender(sentence)
-
-
         doc=helperFunctions.nlp(sentence)
         actorName = UserStory.extractActor ( sentence )
 
@@ -59,9 +57,6 @@ class UserStory ():
                 if foundActor [ 0 ].name == act.name:
                     index = i
                     break
-
-
-
         verb=None
         usecases=[]
         for sentence in doc.sents:
@@ -242,7 +237,6 @@ class UserStory ():
        #
        #  pprint ( compoundVerbs )
         compoundVerbs = list ( dict.fromkeys ( compoundVerbs ) )
-
         return compoundVerbs, actor
 
 

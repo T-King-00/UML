@@ -1,8 +1,11 @@
-I live in Egypt . My name is John.
+I live in Egypt .John is my name . John is marcs friend.
 System shall be able to find books and manage books.
 books include bible and other type of religous books.
 System has users and librarians.
 User should be able to  search for the required books .
+A user is identified with name , email and password,age,gender .
+user's details should be saved in database.
+Details about user are name , email and password,age,gender .
 User can login in the system.
 User can reserve a book .
 User should be able to add new book to the database.

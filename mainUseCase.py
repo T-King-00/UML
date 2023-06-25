@@ -51,8 +51,8 @@ for actor in actors:
         print(actorusecase)
 
 
-filename = "other/usecasediagram1111.txt"
-filename2 = "other/usecasediagram1111.png"
+filename = "other/usecasediagram24-6.txt"
+filename2 = "other /usecasediagram24-6.png"
 if os.path.exists ( filename ) and os.path.exists ( filename2 ):
     os.remove ( filename )
     os.remove ( filename2 )

@@ -99,3 +99,61 @@
  usecase "manage set of course registrations" 
  :company: --> (manage set of course registrations)
  @enduml 
+ @startuml 
+ left to right direction 
+ usecase "see" 
+ :customer: --> (see)
+ usecase "borrow" 
+ :customer: --> (borrow)
+ (borrow) .> (see) : include 
+ usecase " " 
+ :customer: --> ( )
+ usecase "create borrows" 
+ :customer: --> (create borrows)
+ usecase "delete" 
+ :customer: --> (delete)
+ usecase "make recomendation" 
+ :customer: --> (make recomendation)
+ usecase "read recomendation" 
+ :customer: --> (read recomendation)
+ usecase "update borrows" 
+ :customer: --> (update borrows)
+ usecase "search by title" 
+ :borrower: --> (search by title)
+ usecase "view" 
+ :borrower: --> (view)
+ usecase "see the availability of that book" 
+ :borrower: --> (see the availability of that book)
+ usecase "borrow book" 
+ :borrower: --> (borrow book)
+ (borrow book) .> (see the availability of that book) : include 
+ usecase " " 
+ :librarian: --> ( )
+ ( ) .> (see book that be currently) : include 
+ usecase "make call to warn the subscribers after checking which subscriber passed their date" 
+ :librarian: --> (make call to warn the subscribers after checking which subscriber passed their date)
+ usecase "create a book list" 
+ :librarian: --> (create a book list)
+ usecase "determine tail book" 
+ :librarian: --> (determine tail book)
+ usecase "pull books" 
+ :librarian: --> (pull books)
+ (pull books) .> (determine tail book) : include 
+ usecase "get alert when the date be pass" 
+ :librarian: --> (get alert when the date be pass)
+ usecase "dates in order" 
+ :librarian: --> (dates in order)
+ usecase "place number" 
+ :librarian: --> (place number)
+ usecase "see book that be currently" 
+ :librarian: --> (see book that be currently)
+ usecase "generate report on book genre" 
+ :library manager: --> (generate report on book genre)
+ usecase "decide" 
+ :library manager: --> (decide)
+ (decide) .> (generate report on book genre) : include 
+ usecase "filter returns with members" 
+ :library manager: --> (filter returns with members)
+ usecase "arrange number of books regarding their demands" 
+ :library manager: --> (arrange number of books regarding their demands)
+ @enduml 

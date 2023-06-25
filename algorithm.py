@@ -1,4 +1,8 @@
 import regex
+from spacy.matcher import matcher
+from spacy import matcher
+from spacy.matcher import Matcher, DependencyMatcher
+
 import helperFunctions
 import nltk
 from nltk.corpus import wordnet
@@ -11,7 +15,26 @@ conceptList = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
 
-
+def preprocess(text):
+    if not text.endswith ( "." ):
+        text += "."
+    doc = helperFunctions.nlp ( text )
+    for token in doc:
+        # check for compound words
+        if token.text == ",":
+            text = text.replace ( token.text, " and " )
+        if token.dep_ == "compound":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+        # check for gerund followed by a noun
+        if token.pos_ == "VERB" and token.tag_ == "VBG" and token.head.pos_ == "NOUN":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+        # check if a noun is followed by a gerund
+        if token.pos_ == "NOUN" and token.head.pos_ == "VERB" and token.head.tag_ == "VBG":
+            text = text.replace ( token.head.text + " " + token.text, token.head.text + "_" + token.text )
+        # check for adjectives followed by a noun
+        if token.pos_ == "ADJ" and token.head.pos_ == "NOUN":
+            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
+    return text
 # step1 remove stop words and save them in a list
 # returns list of stop words found after passing one sentence at a time
 def getStopWords(sentence):
@@ -25,7 +48,7 @@ def getStopWords(sentence):
 word_frequencies = {}
 
 
-# step 2
+# concepts : step 2
 def calculate_word_frequencies(sentences):
     global word_frequencies
     keys = [ ]
@@ -113,7 +136,7 @@ def generateSentencesFreeFromStopWords(sentences):
 nounsAndVerbs = [ ]
 
 
-# step 6
+# concepts : step 6
 def extraction(sentences):
     global conceptList
     global noun_phrases
@@ -133,12 +156,12 @@ def extraction(sentences):
     return conceptList
 
 
-# step 7
+# concepts : step 7
 def extractPhrasesWithoutSW():
     global noun_phrases
 
 
-# step 9
+#concepts : step 9
 generalizationList = {}
 
 
@@ -212,42 +235,108 @@ def findGeneralization():
     print ( "generalization list", len ( generalizationList.items () ) )
 
 
-def preprocess(text):
-    if not text.endswith ( "." ):
-        text += "."
-    doc = helperFunctions.nlp ( text )
-    for token in doc:
-        # check for compound words
-        if token.text == ",":
-            text = text.replace ( token.text, " and " )
-        if token.dep_ == "compound":
-            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
-        # check for gerund followed by a noun
-        if token.pos_ == "VERB" and token.tag_ == "VBG" and token.head.pos_ == "NOUN":
-            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
-        # check if a noun is followed by a gerund
-        if token.pos_ == "NOUN" and token.head.pos_ == "VERB" and token.head.tag_ == "VBG":
-            text = text.replace ( token.head.text + " " + token.text, token.head.text + "_" + token.text )
-        # check for adjectives followed by a noun
-        if token.pos_ == "ADJ" and token.head.pos_ == "NOUN":
-            text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
-    return text
 
 
 # class identification rules
+classes=[]
+
+
+#class extraction rules :
 def crule2():
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("class extraction from concepts:")
     specific_indicators = {"type", "number", "date", "reference","no","code","volume","birth","id","address","name"}
     business_env = ["database", "record", "information", "organization", "detail", "website", "computer"]
-    for concept in conceptList:
+    global classes
+    classes=conceptList
+    for concept in classes:
         if concept in business_env:
-            conceptList.remove(concept)
+            classes.remove(concept)
+            continue
+
         conceptnlp=helperFunctions.nlp(concept)
         for ent in conceptnlp.ents:
             if ent.text in conceptList:
-                conceptList.remove ( ent.text )
+                classes.remove ( ent.text )
+                continue
         if concept in specific_indicators:
-            conceptList.remove(concept)
-    print("concept list after filtering to extract classes : " , conceptList)
+            classes.remove(concept)
+            continue
+    for tok in tokens:
+            if tok.ent_type_ =="PERSON" or  tok.ent_type_ == "GPE":
+                print ( "token text: ", tok.text,", token type:" ,tok.ent_type_ )
+                if tok.text.lower() in classes:
+                    classes.remove ( tok.text.lower() )
+
+    print(" classes : " , classes)
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+
+attributes= {}
+def arules(sentences):
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("in arules():")
+    verbsForAttributePattern=["identified","known" , "represented" , "denoted" , "described" ]
+    prepsForAttributePattern=["with","by" ]
+    global attributes
+    matcher = Matcher ( helperFunctions.nlp.vocab )
+    sentences = helperFunctions.nlp ( sentences )
+
+    for sentence in sentences.sents:
+        #attribute pattern 1 : details about user are .......
+        attp1=[ {"LOWER": "details"}, {"POS": "ADP"} , {"POS": "NOUN"},{"POS": "AUX"},{"OP": "+"} ]
+        attp2=[ {"LOWER": "details"}, {"POS": "ADP"} , {"POS": "NOUN"},{"POS": "AUX"},{"OP": "+"} ]
+        matcher.add ( "attp1", [ attp1 ] )
+        matcher.add ( "attp2", [ attp2 ] )
+        matches = matcher ( sentence )
+        for match_id, start, end in matches:
+            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
+            span = sentence [ start:end ]  # The matched span
+            atts=[]
+            print(string_id)
+            for I,token in enumerate(span):
+                if string_id=="attp1":
+                    if token.pos_=="NOUN" and token.dep_=="pobj":
+                        classIs=token.text
+                    if token.pos_=="NOUN" and (token.dep_=="attr" or token.dep_=="conj"):
+                        atts.append(token.text)
+            #remove duplicate
+            atts= list ( dict.fromkeys ( atts ) )
+            #add attributes to its class
+            attributes[classIs]=atts
+
+    print("attributes are :: ",attributes)
+
+
+
+    """
+    for sentence in sentences.sents:
+        for i,word in enumerate(sentence):
+
+            if word.is_sent_start:
+                print (word, word.pos_)
+                if word.text.lower() in classes:
+                    print(f"word  -> {word.text} is in classses list")
+            if word.pos_=="VERB" and word.text in verbsForAttributePattern:
+                print("verb is in pattern ( true ).", word.text)
+                if sentence[i+1].text.lower() in prepsForAttributePattern:
+                    print("prep true , " , sentence[i+1].text)
+                    if sentence[i+2].is_stop:
+                        if sentence[i+3].pos_=="NOUN" or sentence[i+3].pos_=="PROPN":
+                            attributes.append ( sentence [ i + 3 ].text )
+                    elif sentence[i+2].pos_=="NOUN" or sentence[i+2].pos_=="PROPN":
+                        attributes.append(sentence[i+2].text)
+                    break
+    """
+
+
+
+
+
+
+
+
+
 
 
 

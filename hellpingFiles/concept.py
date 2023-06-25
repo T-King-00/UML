@@ -1,5 +1,6 @@
 import re
 
+import algorithm
 import helperFunctions
 from UserStory import UserStory
 conceptList = [ ]
@@ -114,14 +115,70 @@ def getClassesFromFrequency(sentences):
     frequency = sorted ( frequency.items (), key=lambda x: x [ 1 ] )
     classFoundFromFreq=sorted(classFoundFromFreq)
 
-    #print ( frequency )
+
     print ( "classes from freq", classFoundFromFreq )
     return classFoundFromFreq
     # wordsAfterLemmaization = stemmingAlgorithm ( list ( wordsinDoc.keys () ) )
     # print ( wordsAfterLemmaization )
+    # pipe = pipeline ( model="facebook/bart-large-mnli" )
+    # result = pipe ( "I have a problem with my iphone that needs to be resolved asap!",
+    #                 candidate_labels=[ "urgent", "not urgent", "phone", "tablet", "computer" ],
+    #                 )
+    # print ( result [ "scores" ] )
 
-    # print ( conceptListVar )
+    ###pipeline
 
+
+
+def getClassesFromFrequency2(sentences):
+    from spacy.lang.en import stop_words as stop_words
+    stop_words_found = [ ]
+    countOfWords = 0
+    stop_words = stop_words.STOP_WORDS
+    wordsinDoc = {}
+    # find stop words and puntuation marks .
+    for i,sentence in enumerate(sentences):
+
+        sentence=" ".join(sentence)
+        sentence = helperFunctions.nlp ( sentence )
+        for tok in sentence:
+            if tok.is_stop:
+                stop_words_found.append ( tok.text )
+            else:
+                countOfWords = countOfWords + 1
+                if tok.lemma_ not in wordsinDoc:
+                    wordsinDoc [ tok.lemma_ ] = 0
+                wordsinDoc [ tok.lemma_ ] = wordsinDoc [ tok.lemma_ ] + 1
+    if stop_words_found is None:
+        print ( "is nnone" )
+
+    stop_words_found = list ( dict.fromkeys ( stop_words_found ) )
+    print ( stop_words_found )
+    print ( wordsinDoc )
+    print ( countOfWords )
+    frequency = {}
+    classFoundFromFreq = [ ]
+    for key in wordsinDoc:
+        freq = wordsinDoc [ key ] / countOfWords
+        WORDSNOTCLASS=["organization","able","date","number","database", "record", "information", "detail", "website", "computer","type", "number", "date", "reference","no","code","volume","birth","id","address","name","list"]
+        frequency [ key ] = freq
+        if frequency [ key ] >= 0.02:
+            keyNlp = helperFunctions.nlp ( key )
+            for doc in keyNlp:
+                if doc.pos_ != "VERB" and doc.text not in WORDSNOTCLASS:
+                    if key in algorithm.classes :
+                        classFoundFromFreq.append ( key )
+            print ( frequency [ key ], key )
+
+    frequency = sorted ( frequency.items (), key=lambda x: x [ 1 ] )
+    classFoundFromFreq=sorted(classFoundFromFreq)
+
+
+    print ( "classes from freq", classFoundFromFreq )
+    algorithm.classes=classFoundFromFreq
+    return classFoundFromFreq
+    # wordsAfterLemmaization = stemmingAlgorithm ( list ( wordsinDoc.keys () ) )
+    # print ( wordsAfterLemmaization )
     # pipe = pipeline ( model="facebook/bart-large-mnli" )
     # result = pipe ( "I have a problem with my iphone that needs to be resolved asap!",
     #                 candidate_labels=[ "urgent", "not urgent", "phone", "tablet", "computer" ],

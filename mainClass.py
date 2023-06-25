@@ -18,7 +18,7 @@ from pprint import pprint
 
 from spacy.matcher import Matcher
 
-from hellpingFiles.concept import getClassesFromFrequency
+from hellpingFiles.concept import getClassesFromFrequency, getClassesFromFrequency2
 from multilabelmodel import model
 import helperFunctions
 from UserStory import UserStory
@@ -50,13 +50,16 @@ if __name__ == '__main__':
     file = helperFunctions.getFile ()
     sentences = helperFunctions.getSentencesFromFile ( file )
     sentences=helperFunctions.preprocess(sentences)
+
+
+
+
     sentences2=' '.join(sentences)
-
-
     print(sentences2)
-    sentences2=algorithm.preprocess(sentences2)
-    print(sentences2)
-    listOfSentences=sentences2.split(".")
+
+    sentences3=algorithm.preprocess(sentences2)
+    print(sentences3)
+    listOfSentences=sentences3.split(".")
 
 
     algorithm.stemmingWholeDocument(listOfSentences)
@@ -69,18 +72,30 @@ if __name__ == '__main__':
     print("main####")
     print("nouns and verbs:" , algorithm.nounsAndVerbs)
     print("stopwords found : ",algorithm.stopwordsFound)
-
+    print("concepts before :" , algorithm.conceptList)
+    #storing concepts InFormOftokens
+    concepts_Tokens =[]
     #find concepts from noun phrases
+    i = 0
+
     for nounphrase in algorithm.noun_phrases:
+
+
         np=helperFunctions.nlp(nounphrase)
         stringNP=""
-        i=0
         for doc in np:
             if not doc.is_stop and not doc.is_space:
-                if doc.pos_=="NOUN":
-                     stringNP += doc.lemma_.lower()
+                if (doc.pos_=="NOUN" or doc.pos_=="PROPN") :
+                    stringNP += doc.lemma_.lower()
+                    concepts_Tokens.append(doc)
+
+
+        i = i + 1
         algorithm.conceptList.append(stringNP)
-        algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
+    #removing duplicates
+    algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
+    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
+    print("concept tokens " ,  concepts_Tokens)
 
     #to get other forms of noun phrases
     matcher = Matcher ( helperFunctions.nlp.vocab )
@@ -94,32 +109,59 @@ if __name__ == '__main__':
             span = sentencenlp [ start:end ]  # The matched span
             #add to concept list
             algorithm.conceptList.append ( span.text )
-            algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
+            concepts_Tokens.append(span)
 
-
+    # removing duplicates
+    algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
+    concepts_Tokens= list ( dict.fromkeys ( concepts_Tokens ) )
 
     print("conceptList:" , algorithm.conceptList)
-
+    print("concept tokens:" ,concepts_Tokens)
     algorithm.findGeneralization()
     print("generalization list :: ", algorithm.generalizationList.items())
-    getClassesFromFrequency(listOfSentences)
-    algorithm.crule2()
+    algorithm.crule2 ()
+    getClassesFromFrequency2(algorithm.sentencesWithoutSW.values())
+
+    print("concept list : " , algorithm.conceptList)
+
+    algorithm.arules(sentences2)
 
 
 
 
 
 
-    #gives error in calculating
-    # freq=algorithm.calculate_word_frequencies(algorithm.sentencesWithoutSW)
-    #
-    #
-    # print("freq: ",freq)
-    # for key in freq.keys():
-    #     if freq[key]>0.02:
-    #         print ("    ",key,":  " ,freq[key])
-    #
-    #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#gives error in calculating
+# freq=algorithm.calculate_word_frequencies(algorithm.sentencesWithoutSW)
+#
+#
+# print("freq: ",freq)
+# for key in freq.keys():
+#     if freq[key]>0.02:
+#         print ("    ",key,":  " ,freq[key])
+#
+#
 
 
 
