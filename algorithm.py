@@ -322,13 +322,13 @@ def arules(sentences):
                     continue
                 if string_id == "attp1" :
                     if token.pos_ == "NOUN" and token.dep_ == "pobj":
-                        classIs = token.text
+                        classIs = token.text.lower()
                     if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
                 if string_id == "attp2":
                     if (token.pos_ == "NOUN" or token.pos_ == "PROPN") and (
                             token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
-                        classIs = token.text
+                        classIs = token.text.lower()
                     elif (token.pos_ == "NOUN" or token.pos_ == "PROPN"):
                         compoundnoun = ""
                         if token.dep_ == "compound":
@@ -343,7 +343,7 @@ def arules(sentences):
                             atts.append ( token.text )
                 if string_id == "attp3":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
-                        classIs = token.text
+                        classIs = token.text.lower()
                     if token.pos_ == "NOUN" and ( token.dep_=="dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
             # remove duplicate
