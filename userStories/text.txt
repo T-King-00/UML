@@ -1,16 +1,20 @@
-I live in Egypt .John is my name . John is marcs friend.
+
 System shall be able to find books and manage books.
-books include bible and other type of religous books.
-System has users and librarians.
+Books include bible and other type of religous books.
+Library contains different categories of books .
+System has Users and librarians and books.
+user should be able to view book online after logging in .
+User can reserve a book to borrow hard copy of a book.
 User should be able to  search for the required books .
-A user is identified with name , email and password,age,gender .
-user's details should be saved in database.
-Details about user are name , email and password,age,gender .
-User can login in the system.
-User can reserve a book .
-User should be able to add new book to the database.
+Details about user are name ,email, password and age,gender .
+User's details should be saved in database.
 User can search for books based on title, date of publication  , author , find their location in the library.
+Librarian should be able to add new book to the database.
+Details about user should be stored in database.
 librarian can add and remove new users.
 Librarian can add and manage the books.
+Librarian should be able to add new book to the database.
+A book is identified with title , author and publishing date ,version.
 The system should notify the user and librarian about the overdue books.
 The system calculates the fine for overdue books on their return.
+I live in Egypt .John is my name . John is marcs friend.

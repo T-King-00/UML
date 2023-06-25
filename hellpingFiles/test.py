@@ -4,7 +4,8 @@ import helperFunctions
 
 if __name__ == '__main__':
 
-    sentence="A user is identified with name , email and password,age,gender ."
+    sentence="Details about user are name , email , password and age,gender .Details about user should be stored in database."
+
 
     #helperFunctions.displayRender(sentence)
     sent=helperFunctions.nlp(sentence)

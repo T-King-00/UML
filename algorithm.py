@@ -15,6 +15,7 @@ conceptList = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
 
+
 def preprocess(text):
     if not text.endswith ( "." ):
         text += "."
@@ -35,6 +36,8 @@ def preprocess(text):
         if token.pos_ == "ADJ" and token.head.pos_ == "NOUN":
             text = text.replace ( token.text + " " + token.head.text, token.text + "_" + token.head.text )
     return text
+
+
 # step1 remove stop words and save them in a list
 # returns list of stop words found after passing one sentence at a time
 def getStopWords(sentence):
@@ -161,7 +164,7 @@ def extractPhrasesWithoutSW():
     global noun_phrases
 
 
-#concepts : step 9
+# concepts : step 9
 generalizationList = {}
 
 
@@ -235,77 +238,108 @@ def findGeneralization():
     print ( "generalization list", len ( generalizationList.items () ) )
 
 
-
-
 # class identification rules
-classes=[]
+classes = [ ]
 
 
-#class extraction rules :
+# class extraction rules :
 def crule2():
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("class extraction from concepts:")
-    specific_indicators = {"type", "number", "date", "reference","no","code","volume","birth","id","address","name"}
-    business_env = ["database", "record", "information", "organization", "detail", "website", "computer"]
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "class extraction from concepts:" )
+    specific_indicators = {"type", "number", "date", "reference", "no", "code", "volume", "birth", "id", "address",
+                           "name"}
+    business_env = [ "database", "record", "information", "organization", "detail", "website", "computer" ]
     global classes
-    classes=conceptList
+    classes = conceptList
     for concept in classes:
         if concept in business_env:
-            classes.remove(concept)
+            classes.remove ( concept )
             continue
 
-        conceptnlp=helperFunctions.nlp(concept)
+        conceptnlp = helperFunctions.nlp ( concept )
         for ent in conceptnlp.ents:
             if ent.text in conceptList:
                 classes.remove ( ent.text )
                 continue
         if concept in specific_indicators:
-            classes.remove(concept)
+            classes.remove ( concept )
             continue
     for tok in tokens:
-            if tok.ent_type_ =="PERSON" or  tok.ent_type_ == "GPE":
-                print ( "token text: ", tok.text,", token type:" ,tok.ent_type_ )
-                if tok.text.lower() in classes:
-                    classes.remove ( tok.text.lower() )
+        if tok.ent_type_ == "PERSON" or tok.ent_type_ == "GPE":
+            print ( "token text: ", tok.text, ", token type:", tok.ent_type_ )
+            if tok.text.lower () in classes:
+                classes.remove ( tok.text.lower () )
 
-    print(" classes : " , classes)
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print ( " classes : ", classes )
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
 
 
-attributes= {}
+attributes = {}
+
+
 def arules(sentences):
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("in arules():")
-    verbsForAttributePattern=["identified","known" , "represented" , "denoted" , "described" ]
-    prepsForAttributePattern=["with","by" ]
+
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "in arules():" )
     global attributes
     matcher = Matcher ( helperFunctions.nlp.vocab )
     sentences = helperFunctions.nlp ( sentences )
 
+    verbsForAttributePattern = [ "identified", "known", "represented", "denoted", "described" ]
+    prepsForAttributePattern = [ "with", "by" ]
+
     for sentence in sentences.sents:
-        #attribute pattern 1 : details about user are .......
-        attp1=[ {"LOWER": "details"}, {"POS": "ADP"} , {"POS": "NOUN"},{"POS": "AUX"},{"OP": "+"} ]
-        attp2=[ {"LOWER": "details"}, {"POS": "ADP"} , {"POS": "NOUN"},{"POS": "AUX"},{"OP": "+"} ]
-        matcher.add ( "attp1", [ attp1 ] )
+        # attribute pattern 1 : details about user are .......
+        AUX=["are","is"]
+        attp1 = [ {"LOWER": "details"}, {"POS": "ADP"}, {"POS": "NOUN"},{"POS": "AUX" , "LOWER":{"IN": AUX } }, {"OP": "+"} ]
+        attp2 = [ {"POS": "DET"}, {"POS": "NOUN"}, {"POS": "AUX"},
+                  {"POS": "VERB", "DEP": "ROOT"}, {"POS": "ADP"},
+                  {"OP": "+"} ]
+        matcher.add ( "attp1", [ attp1 ],greedy="LONGEST" )
         matcher.add ( "attp2", [ attp2 ] )
         matches = matcher ( sentence )
         for match_id, start, end in matches:
             string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
             span = sentence [ start:end ]  # The matched span
-            atts=[]
-            print(string_id)
-            for I,token in enumerate(span):
-                if string_id=="attp1":
-                    if token.pos_=="NOUN" and token.dep_=="pobj":
-                        classIs=token.text
-                    if token.pos_=="NOUN" and (token.dep_=="attr" or token.dep_=="conj"):
-                        atts.append(token.text)
-            #remove duplicate
-            atts= list ( dict.fromkeys ( atts ) )
-            #add attributes to its class
-            attributes[classIs]=atts
+            atts = [ ]
+            classIs = ""
+            #print ( string_id )
+            skipnext = False
+            for I, token in enumerate ( span ):
+                if skipnext == True:
+                    skipnext=False
+                    continue
+                if string_id == "attp1" :
+                    if token.pos_ == "NOUN" and token.dep_ == "pobj":
+                        classIs = token.text
+                    if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
+                        atts.append ( token.text )
+                if string_id == "attp2":
+                    if (token.pos_ == "NOUN" or token.pos_ == "PROPN") and (
+                            token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
+                        classIs = token.text
+                    elif (token.pos_ == "NOUN" or token.pos_ == "PROPN"):
+                        compoundnoun = ""
+                        if token.dep_ == "compound":
+                            if len(span)> I+1:
+                                if span [ I + 1 ].pos_ == "NOUN" or span [ I + 1 ].pos_ == "PROPN":
+                                    compoundnoun = token.text + "_" + span [ I + 1 ].text
+                        if compoundnoun != "":
+                            atts.append ( compoundnoun )
+                            skipnext=True
+                            continue
+                        else:
+                            atts.append ( token.text )
 
-    print("attributes are :: ",attributes)
+            # remove duplicate
+            atts = list ( dict.fromkeys ( atts ) )
+            # add attributes to its class
+            if classIs != "":
+                attributes [ classIs ] = atts
+
+    print ( "attributes are :: ", attributes )
+
+
 
 
 
@@ -328,15 +362,3 @@ def arules(sentences):
                         attributes.append(sentence[i+2].text)
                     break
     """
-
-
-
-
-
-
-
-
-
-
-
-
