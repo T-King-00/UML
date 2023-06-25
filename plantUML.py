@@ -107,11 +107,11 @@ class ClassModel ( PlantUml ):
         self.file.write ( f""" ({Class1}, {Class2}) .. {AssoClass} \n""" )
 
     #####
-    def addCustomMessage(self, msg):
-        super ().addCustomMessage ( msg )
 
     def closeFile(self):
+
         super ().closeFile ()
+
 
 
 """

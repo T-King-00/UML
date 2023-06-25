@@ -14,7 +14,7 @@ tokens = [ ]
 conceptList = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
-
+attributes = {}
 
 def preprocess(text):
     if not text.endswith ( "." ):
@@ -274,7 +274,7 @@ def crule2():
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
 
 
-attributes = {}
+
 
 
 def arules(sentences):
@@ -287,16 +287,27 @@ def arules(sentences):
 
     verbsForAttributePattern = [ "identified", "known", "represented", "denoted", "described" ]
     prepsForAttributePattern = [ "with", "by" ]
+    AUX = [ "are", "is" ]
+    attp2Verbs=["identified","known","represented","denoted","described"]
 
+    # attribute pattern 1 : details about user are .......
+    attp1 = [ {"LOWER": "details"}, {"POS": "ADP"}, {"POS": "NOUN"}, {"POS": "AUX", "LOWER": {"IN": AUX}}, {"OP": "+"} ]
+
+    #attribute pattern 2 : A ... is identified with .... , ..... .
+    attp2Verbs=["identified","known","represented","denoted","described"]
+    attp2 = [ {"POS": "DET"}, {"POS": "NOUN"}, {"POS": "AUX", "LOWER": {"IN": AUX}},
+              {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": attp2Verbs}}, {"POS": "ADP"},
+              {"OP": "+"} ]
+
+    # attribute pattern 3 : every ...  contains  .... , ..... .
+    attp3Verbs=["has","have" ,"show" ,"shows","contain","contains","include", "includes"]
+    attp3 = [ {"POS": "DET","OP":"*"},  {"POS": "NOUN"}, {"POS": "VERB", "DEP": "ROOT","LOWER": {"IN": attp3Verbs}}  , {"OP": "+"} ]
+
+    matcher.add ( "attp1", [ attp1 ], greedy="LONGEST" )
+    matcher.add ( "attp2", [ attp2 ], greedy="LONGEST" )
+    matcher.add ( "attp3", [ attp3 ], greedy="LONGEST" )
     for sentence in sentences.sents:
-        # attribute pattern 1 : details about user are .......
-        AUX=["are","is"]
-        attp1 = [ {"LOWER": "details"}, {"POS": "ADP"}, {"POS": "NOUN"},{"POS": "AUX" , "LOWER":{"IN": AUX } }, {"OP": "+"} ]
-        attp2 = [ {"POS": "DET"}, {"POS": "NOUN"}, {"POS": "AUX"},
-                  {"POS": "VERB", "DEP": "ROOT"}, {"POS": "ADP"},
-                  {"OP": "+"} ]
-        matcher.add ( "attp1", [ attp1 ],greedy="LONGEST" )
-        matcher.add ( "attp2", [ attp2 ] )
+
         matches = matcher ( sentence )
         for match_id, start, end in matches:
             string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
@@ -330,7 +341,11 @@ def arules(sentences):
                             continue
                         else:
                             atts.append ( token.text )
-
+                if string_id == "attp3":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        classIs = token.text
+                    if token.pos_ == "NOUN" and ( token.dep_=="dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
+                        atts.append ( token.text )
             # remove duplicate
             atts = list ( dict.fromkeys ( atts ) )
             # add attributes to its class
@@ -338,6 +353,11 @@ def arules(sentences):
                 attributes [ classIs ] = atts
 
     print ( "attributes are :: ", attributes )
+
+
+
+
+
 
 
 

@@ -1,4 +1,3 @@
-
 System shall be able to find books and manage books.
 Books include bible and other type of religous books.
 Library contains different categories of books .
@@ -10,6 +9,7 @@ Details about user are name ,email, password and age,gender .
 User's details should be saved in database.
 User can search for books based on title, date of publication  , author , find their location in the library.
 Librarian should be able to add new book to the database.
+Each Librarian have email and password to login.
 Details about user should be stored in database.
 librarian can add and remove new users.
 Librarian can add and manage the books.

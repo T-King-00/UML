@@ -10,7 +10,7 @@ format of user story . As a ..... , i want to , so that   ...... .
 5-class relation ()
 5-drawing. (done)
 """
-
+import os
 import pickle
 import string
 from collections import OrderedDict, Counter
@@ -18,13 +18,14 @@ from pprint import pprint
 
 from spacy.matcher import Matcher
 
+import plantUML
+from ClassEntity import ClassEntity
 from hellpingFiles.concept import getClassesFromFrequency, getClassesFromFrequency2
 from multilabelmodel import model
 import helperFunctions
 from UserStory import UserStory
 from other.classRules import Extraction
 import algorithm
-
 
 """
 def calculate_word_frequencies(sentences):
@@ -43,116 +44,107 @@ def calculate_word_frequencies(sentences):
     return word_frequencies
 """
 
-
 if __name__ == '__main__':
 
-    #variables
+    # variables
     file = helperFunctions.getFile ()
     sentences = helperFunctions.getSentencesFromFile ( file )
-    sentences=helperFunctions.preprocess(sentences)
+    sentences = helperFunctions.preprocess ( sentences )
 
+    sentences2 = ' '.join ( sentences )
+    print ( sentences2 )
 
+    sentences3 = algorithm.preprocess ( sentences2 )
+    print ( sentences3 )
+    listOfSentences = sentences3.split ( "." )
 
+    algorithm.stemmingWholeDocument ( listOfSentences )
+    algorithm.parsingWholeDocument ( listOfSentences )
 
-    sentences2=' '.join(sentences)
-    print(sentences2)
+    algorithm.generateSentencesFreeFromStopWords ( listOfSentences )
+    algorithm.extraction ( listOfSentences )
+    algorithm.removingDublicatesSw ()
 
-    sentences3=algorithm.preprocess(sentences2)
-    print(sentences3)
-    listOfSentences=sentences3.split(".")
-
-
-    algorithm.stemmingWholeDocument(listOfSentences)
-    algorithm.parsingWholeDocument(listOfSentences)
-
-    algorithm.generateSentencesFreeFromStopWords(listOfSentences)
-    algorithm.extraction(listOfSentences)
-    algorithm.removingDublicatesSw()
-
-    print("main####")
-    print("nouns and verbs:" , algorithm.nounsAndVerbs)
-    print("stopwords found : ",algorithm.stopwordsFound)
-    print("concepts before :" , algorithm.conceptList)
-    #storing concepts InFormOftokens
-    concepts_Tokens =[]
-    #find concepts from noun phrases
+    print ( "main####" )
+    print ( "nouns and verbs:", algorithm.nounsAndVerbs )
+    print ( "stopwords found : ", algorithm.stopwordsFound )
+    print ( "concepts before :", algorithm.conceptList )
+    # storing concepts InFormOftokens
+    concepts_Tokens = [ ]
+    # find concepts from noun phrases
     i = 0
 
     for nounphrase in algorithm.noun_phrases:
 
-
-        np=helperFunctions.nlp(nounphrase)
-        stringNP=""
+        np = helperFunctions.nlp ( nounphrase )
+        stringNP = ""
         for doc in np:
             if not doc.is_stop and not doc.is_space:
-                if (doc.pos_=="NOUN" or doc.pos_=="PROPN") :
-                    stringNP += doc.lemma_.lower()
-                    concepts_Tokens.append(doc)
-
+                if (doc.pos_ == "NOUN" or doc.pos_ == "PROPN"):
+                    stringNP += doc.lemma_.lower ()
+                    concepts_Tokens.append ( doc )
 
         i = i + 1
-        algorithm.conceptList.append(stringNP)
-    #removing duplicates
+        algorithm.conceptList.append ( stringNP )
+    # removing duplicates
     algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
     concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
-    print("concept tokens " ,  concepts_Tokens)
+    print ( "concept tokens ", concepts_Tokens )
 
-    #to get other forms of noun phrases
+    # to get other forms of noun phrases
     matcher = Matcher ( helperFunctions.nlp.vocab )
-    pattern0 = [ {"POS": "NOUN"}, {"POS": "ADP"}, {"POS": "NOUN"}  ]
-    matcher.add("noun_det_noun",[pattern0])
+    pattern0 = [ {"POS": "NOUN"}, {"POS": "ADP"}, {"POS": "NOUN"} ]
+    matcher.add ( "noun_det_noun", [ pattern0 ] )
     for sent in listOfSentences:
-        sentencenlp=helperFunctions.nlp(sent)
+        sentencenlp = helperFunctions.nlp ( sent )
         matches = matcher ( sentencenlp )
         for match_id, start, end in matches:
             string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
             span = sentencenlp [ start:end ]  # The matched span
-            #add to concept list
+            # add to concept list
             algorithm.conceptList.append ( span.text )
-            concepts_Tokens.append(span)
+            concepts_Tokens.append ( span )
 
     # removing duplicates
     algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
-    concepts_Tokens= list ( dict.fromkeys ( concepts_Tokens ) )
+    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
 
-    print("conceptList:" , algorithm.conceptList)
-    print("concept tokens:" ,concepts_Tokens)
-    algorithm.findGeneralization()
-    print("generalization list :: ", algorithm.generalizationList.items())
+    print ( "conceptList:", algorithm.conceptList )
+    print ( "concept tokens:", concepts_Tokens )
+    algorithm.findGeneralization ()
+    print ( "generalization list :: ", algorithm.generalizationList.items () )
     algorithm.crule2 ()
-    getClassesFromFrequency2(algorithm.sentencesWithoutSW.values())
+    getClassesFromFrequency2 ( algorithm.sentencesWithoutSW.values () )
 
-    print("concept list : " , algorithm.conceptList)
+    print ( "concept list : ", algorithm.conceptList )
 
-    algorithm.arules(sentences2)
+    algorithm.arules ( sentences2 )
 
+    filename = "other/classDiagram-1.txt"
+    filename2 = "other/classDiagram-1.png"
+    if os.path.exists ( filename ) and os.path.exists ( filename2 ):
+        os.remove ( filename )
+        os.remove ( filename2 )
+    else:
+        print ( "The file does not exist" )
 
+    os.system ( "pip install plantuml" )
+    classModel = plantUML.ClassModel ( filename )
 
+    for classVar in algorithm.classes:
+        classEntity = ClassEntity ( classVar )
+        if classEntity.className in algorithm.attributes.keys():
+            for x in algorithm.attributes [ classEntity.className ]:
+                classEntity.addAttributeToClass ( x )
 
+        classModel.addClass ( classEntity.className )
+        for att in classEntity.classAttributes:
+            classModel.addMorFtoClass ( classEntity.className, att, '+' )
 
+    classModel.closeFile ()
+    os.system ( "python -m plantuml " + filename )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#gives error in calculating
+# gives error in calculating
 # freq=algorithm.calculate_word_frequencies(algorithm.sentencesWithoutSW)
 #
 #
@@ -164,18 +156,12 @@ if __name__ == '__main__':
 #
 
 
-
 #  calculating words count and word feq
 #
 # count=0
 # for val in sentencesWithoutSW.keys():
 #     count+= len ( sentencesWithoutSW[val ] )
 # print(count)
-
-
-
-
-
 
 
 #

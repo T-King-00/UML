@@ -4,7 +4,7 @@ import helperFunctions
 
 if __name__ == '__main__':
 
-    sentence="Details about user are name , email , password and age,gender .Details about user should be stored in database."
+    sentence="every user have  name , email , password and age,gender ."
 
 
     #helperFunctions.displayRender(sentence)
