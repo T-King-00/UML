@@ -303,9 +303,18 @@ def arules(sentences):
     attp3Verbs=["has","have" ,"show" ,"shows","contain","contains","include", "includes"]
     attp3 = [ {"POS": "DET","OP":"*"},  {"POS": "NOUN"}, {"POS": "VERB", "DEP": "ROOT","LOWER": {"IN": attp3Verbs}}  , {"OP": "+"} ]
 
+    # attribute pattern 4 : name is unique WITHIN user .
+    uniqueSyn=["different","alone", "unique", "unequaled", "unequalled", "unparalleled", "singular"]
+
+    attp4=[{"POS": "NOUN" , "DEP":"nsubj" } , {"POS": "AUX", "LOWER": {"IN": AUX} } ,
+           {"POS": "ADJ" , "DEP":"acomp"   }  ,
+           {"LOWER" : "within"},{"POS": "DET","OP":"*"},
+           {"POS": "NOUN"}
+           ]
     matcher.add ( "attp1", [ attp1 ], greedy="LONGEST" )
     matcher.add ( "attp2", [ attp2 ], greedy="LONGEST" )
     matcher.add ( "attp3", [ attp3 ], greedy="LONGEST" )
+    matcher.add ( "attp4", [ attp4 ], greedy="LONGEST" )
     for sentence in sentences.sents:
 
         matches = matcher ( sentence )
@@ -346,6 +355,12 @@ def arules(sentences):
                         classIs = token.text.lower()
                     if token.pos_ == "NOUN" and ( token.dep_=="dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
+                if string_id == "attp4":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        atts.append ( token.text )
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "pobj" or token.dep_ == "conj"):
+                        classIs = token.text.lower()
+
             # remove duplicate
             atts = list ( dict.fromkeys ( atts ) )
             # add attributes to its class

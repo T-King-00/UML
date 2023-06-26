@@ -4,6 +4,7 @@ from pathlib import Path
 
 import requests
 from IPython.core.display import SVG, display, HTML
+from nltk.corpus import wordnet
 from spacy.language import Language
 import spacy
 from spacy import displacy
@@ -151,4 +152,35 @@ def printtags(sent):
         print ( "token:", token.text, "  token pos", token.pos_ )
 
 
+def findSynonyms(word):
+    wordsSynonyms = {}
+    # Finding synonym
+    synonums = [ ]
+    for stn in wordnet.synsets ( word ):
+        for l in stn.lemmas ():
+            stringobj = l.name ()
+            stringobj = nlp ( stringobj )
+            for doc in stringobj:
+                varobj = ""
+                i = 0
+                for o in stringobj:
+                    i += 1
+                    if len ( o ) > 2:
+                        if i == 1:
+                            if doc.pos_ == "PROPN":
+                                varobj = doc.lemma_.lower ()
+                            else:
+                                varobj = doc.text.lower ()
+
+                        else:
+                            if doc.pos_ == "PROPN":
+                                varobj += "_" + doc.lemma_.lower ()
+                            else:
+                                varobj += "_" + doc.text.lower ()
+                synonums.append ( varobj )
+        wordsSynonyms [ word ] = synonums
+
+    print ( "synonyms of ", word, wordsSynonyms [ word ] )
+
+    return synonums
 

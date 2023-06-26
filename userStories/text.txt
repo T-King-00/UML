@@ -2,11 +2,13 @@ System shall be able to find books and manage books.
 Books include bible and other type of religous books.
 Library contains different categories of books .
 System has Users and librarians and books.
+Name is unique within user .
 user should be able to view book online after logging in .
 User can reserve a book to borrow hard copy of a book.
 User should be able to  search for the required books .
 Details about user are name ,email, password and age,gender .
 User's details should be saved in database.
+identifier is unique within librarian .
 User can search for books based on title, date of publication  , author , find their location in the library.
 Librarian should be able to add new book to the database.
 Each Librarian have email and password to login.
