@@ -305,16 +305,25 @@ def arules(sentences):
 
     # attribute pattern 4 : name is unique WITHIN user .
     uniqueSyn=["different","alone", "unique", "unequaled", "unequalled", "unparalleled", "singular"]
-
     attp4=[{"POS": "NOUN" , "DEP":"nsubj" } , {"POS": "AUX", "LOWER": {"IN": AUX} } ,
            {"POS": "ADJ" , "DEP":"acomp"   }  ,
            {"LOWER" : "within"},{"POS": "DET","OP":"*"},
            {"POS": "NOUN"}
            ]
+    # attribute pattern 5 : ... is required for every className
+    requiredSyns = [ "required" ,"necessitate", "asked", "postulated", "needed", "take", "involve", "called", "demanded", "expected", "commanded", "wanted", "needed", "needful", "required", "requisited", "compulsory", "mandatory","claimed"]
+    attp5 = [ {"POS": "NOUN", "DEP": "nsubjpass "}, {"POS": "AUX", "LOWER": {"IN": AUX}},
+              {"POS": "VERB", "DEP": "ROOT","LOWER":{"IN": requiredSyns}},
+              {"POS": "ADP" ,"LOWER" : "for" }, {"POS": "DET", "OP": "*"},
+              {"POS": "NOUN", "DEP":"pobj"}
+              ]
+
+
     matcher.add ( "attp1", [ attp1 ], greedy="LONGEST" )
     matcher.add ( "attp2", [ attp2 ], greedy="LONGEST" )
     matcher.add ( "attp3", [ attp3 ], greedy="LONGEST" )
     matcher.add ( "attp4", [ attp4 ], greedy="LONGEST" )
+    matcher.add ( "attp5", [ attp5 ], greedy="LONGEST" )
     for sentence in sentences.sents:
 
         matches = matcher ( sentence )
@@ -334,7 +343,7 @@ def arules(sentences):
                         classIs = token.text.lower()
                     if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
-                if string_id == "attp2":
+                elif string_id == "attp2":
                     if (token.pos_ == "NOUN" or token.pos_ == "PROPN") and (
                             token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
                         classIs = token.text.lower()
@@ -350,16 +359,21 @@ def arules(sentences):
                             continue
                         else:
                             atts.append ( token.text )
-                if string_id == "attp3":
+                elif string_id == "attp3":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
                         classIs = token.text.lower()
                     if token.pos_ == "NOUN" and ( token.dep_=="dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
-                if string_id == "attp4":
+                elif string_id == "attp4":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
                         atts.append ( token.text )
                     if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "pobj" or token.dep_ == "conj"):
                         classIs = token.text.lower()
+                elif string_id == "attp5":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubjpass ":
+                        atts.append ( token.text )
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "pobj" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
 
             # remove duplicate
             atts = list ( dict.fromkeys ( atts ) )

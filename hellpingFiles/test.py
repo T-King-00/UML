@@ -68,13 +68,18 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="A name is unique for every user ."
+    sentence="Name is required for every user"
 
 
     #helperFunctions.displayRender(sentence)
     sent=helperFunctions.nlp(sentence)
     for word in sent:
         print(word.text,"  : "  , word.pos_,word.dep_, word.is_stop,"  :  " ,word.tag_,word.ent_type_)
+    findSynonyms("required")
+    for x in findSynonyms("required"):
+        x=helperFunctions.nlp(x)
+
+        print(x)
 
 
 
