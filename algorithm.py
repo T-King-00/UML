@@ -15,6 +15,8 @@ conceptList = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
 attributes = {}
+IRelations={}
+
 
 def preprocess(text):
     if not text.endswith ( "." ):
@@ -274,11 +276,8 @@ def crule2():
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
 
 
-
-
-
-def arules(sentences):
-
+# extract attributes from previously specified patterns .
+def ExtractAttributes(sentences):
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     print ( "in arules():" )
     global attributes
@@ -288,36 +287,37 @@ def arules(sentences):
     verbsForAttributePattern = [ "identified", "known", "represented", "denoted", "described" ]
     prepsForAttributePattern = [ "with", "by" ]
     AUX = [ "are", "is" ]
-    attp2Verbs=["identified","known","represented","denoted","described"]
 
     # attribute pattern 1 : details about user are .......
     attp1 = [ {"LOWER": "details"}, {"POS": "ADP"}, {"POS": "NOUN"}, {"POS": "AUX", "LOWER": {"IN": AUX}}, {"OP": "+"} ]
 
-    #attribute pattern 2 : A ... is identified with .... , ..... .
-    attp2Verbs=["identified","known","represented","denoted","described"]
+    # attribute pattern 2 : A ... is identified with .... , ..... .
+    attp2Verbs = [ "identified", "known", "represented", "denoted", "described" ]
     attp2 = [ {"POS": "DET"}, {"POS": "NOUN"}, {"POS": "AUX", "LOWER": {"IN": AUX}},
               {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": attp2Verbs}}, {"POS": "ADP"},
               {"OP": "+"} ]
 
     # attribute pattern 3 : every ...  contains  .... , ..... .
-    attp3Verbs=["has","have" ,"show" ,"shows","contain","contains","include", "includes"]
-    attp3 = [ {"POS": "DET","OP":"*"},  {"POS": "NOUN"}, {"POS": "VERB", "DEP": "ROOT","LOWER": {"IN": attp3Verbs}}  , {"OP": "+"} ]
+    attp3Verbs = [ "has", "have", "show", "shows", "contain", "contains", "include", "includes" ]
+    attp3 = [ {"POS": "DET", "OP": "*"}, {"POS": "NOUN"}, {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": attp3Verbs}},
+              {"OP": "+"} ]
 
     # attribute pattern 4 : name is unique WITHIN user .
-    uniqueSyn=["different","alone", "unique", "unequaled", "unequalled", "unparalleled", "singular"]
-    attp4=[{"POS": "NOUN" , "DEP":"nsubj" } , {"POS": "AUX", "LOWER": {"IN": AUX} } ,
-           {"POS": "ADJ" , "DEP":"acomp"   }  ,
-           {"LOWER" : "within"},{"POS": "DET","OP":"*"},
-           {"POS": "NOUN"}
-           ]
-    # attribute pattern 5 : ... is required for every className
-    requiredSyns = [ "required" ,"necessitate", "asked", "postulated", "needed", "take", "involve", "called", "demanded", "expected", "commanded", "wanted", "needed", "needful", "required", "requisited", "compulsory", "mandatory","claimed"]
-    attp5 = [ {"POS": "NOUN", "DEP": "nsubjpass "}, {"POS": "AUX", "LOWER": {"IN": AUX}},
-              {"POS": "VERB", "DEP": "ROOT","LOWER":{"IN": requiredSyns}},
-              {"POS": "ADP" ,"LOWER" : "for" }, {"POS": "DET", "OP": "*"},
-              {"POS": "NOUN", "DEP":"pobj"}
+    uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
+    attp4 = [ {"POS": "NOUN", "DEP": "nsubj"}, {"POS": "AUX", "LOWER": {"IN": AUX}},
+              {"POS": "ADJ", "DEP": "acomp"},
+              {"LOWER": "within"}, {"POS": "DET", "OP": "*"},
+              {"POS": "NOUN"}
               ]
-
+    # attribute pattern 5 : ... is required for every className
+    requiredSyns = [ "required", "necessitate", "asked", "postulated", "needed", "take", "involve", "called",
+                     "demanded", "expected", "commanded", "wanted", "needed", "needful", "required", "requisited",
+                     "compulsory", "mandatory", "claimed" ]
+    attp5 = [ {"POS": "NOUN", "DEP": "nsubjpass "}, {"POS": "AUX", "LOWER": {"IN": AUX}},
+              {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": requiredSyns}},
+              {"POS": "ADP", "LOWER": "for"}, {"POS": "DET", "OP": "*"},
+              {"POS": "NOUN", "DEP": "pobj"}
+              ]
 
     matcher.add ( "attp1", [ attp1 ], greedy="LONGEST" )
     matcher.add ( "attp2", [ attp2 ], greedy="LONGEST" )
@@ -332,43 +332,43 @@ def arules(sentences):
             span = sentence [ start:end ]  # The matched span
             atts = [ ]
             classIs = ""
-            #print ( string_id )
+            # print ( string_id )
             skipnext = False
             for I, token in enumerate ( span ):
                 if skipnext == True:
-                    skipnext=False
+                    skipnext = False
                     continue
-                if string_id == "attp1" :
+                if string_id == "attp1":
                     if token.pos_ == "NOUN" and token.dep_ == "pobj":
-                        classIs = token.text.lower()
+                        classIs = token.text.lower ()
                     if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
                 elif string_id == "attp2":
                     if (token.pos_ == "NOUN" or token.pos_ == "PROPN") and (
                             token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
-                        classIs = token.text.lower()
+                        classIs = token.text.lower ()
                     elif (token.pos_ == "NOUN" or token.pos_ == "PROPN"):
                         compoundnoun = ""
                         if token.dep_ == "compound":
-                            if len(span)> I+1:
+                            if len ( span ) > I + 1:
                                 if span [ I + 1 ].pos_ == "NOUN" or span [ I + 1 ].pos_ == "PROPN":
                                     compoundnoun = token.text + "_" + span [ I + 1 ].text
                         if compoundnoun != "":
                             atts.append ( compoundnoun )
-                            skipnext=True
+                            skipnext = True
                             continue
                         else:
                             atts.append ( token.text )
                 elif string_id == "attp3":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
-                        classIs = token.text.lower()
-                    if token.pos_ == "NOUN" and ( token.dep_=="dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "attr" or token.dep_ == "conj"):
                         atts.append ( token.text )
                 elif string_id == "attp4":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
                         atts.append ( token.text )
                     if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "pobj" or token.dep_ == "conj"):
-                        classIs = token.text.lower()
+                        classIs = token.text.lower ()
                 elif string_id == "attp5":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubjpass ":
                         atts.append ( token.text )
@@ -382,15 +382,6 @@ def arules(sentences):
                 attributes [ classIs ] = atts
 
     print ( "attributes are :: ", attributes )
-
-
-
-
-
-
-
-
-
 
     """
     for sentence in sentences.sents:
@@ -411,3 +402,113 @@ def arules(sentences):
                         attributes.append(sentence[i+2].text)
                     break
     """
+
+
+# extract inheritance relation from previously specified patterns .
+def ExtractInheritanceR(sentences):
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "in ExtractInheritanceR():" )
+    global IRelations
+
+
+    matcher = Matcher ( helperFunctions.nlp.vocab )
+    #patterns
+    # inheritance pattern 1 : type of xxxxx  are xxxxxxx
+    #uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
+    AUX = [ "are", "is" ]
+    TYPEWORD=["types","type"]
+    inherRp1= [ {"POS": "NOUN", "DEP": "nsubj" , "LOWER":{"IN": TYPEWORD }}, {"POS": "ADP","DEP":"prep" },
+                {"POS": "NOUN", "DEP": "pobj"},
+                {"POS": "AUX", "DEP": "ROOT" , "LOWER":{"IN": AUX}},
+                {"OP": "*"}
+              ]
+
+    # pattern 2 :  x is a xxx
+    inherRp2 = [ {"POS": "NOUN", "DEP": "nsubj"},
+                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
+                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": ["a","an"]}},
+                 {"POS": "NOUN"}
+                 ]
+
+    # pattern 3 :  .... could be a .... or ...
+    inherRp3 = [ {"POS": "NOUN", "DEP": "nsubj"},
+                 {"POS": "AUX", "DEP": "aux", "LOWER": {"IN": ["may","can","could","might"]}},
+                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "be" },
+                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": ["a","an"]}},
+                 {"POS": "NOUN"},{"OP": "*"}
+                ]
+
+    # pattern 4 :  .... is a subclass of ....
+    inherRp4 = [ {"POS": "NOUN", "DEP": "nsubj"},
+                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
+                 {"POS": "DET", "DEP": "det", "LOWER": "a" },
+                 {"LOWER": "subclass" ,"DEP": "compound"},
+                 {"POS": "NOUN", "DEP": "attr", "LOWER": "class"},
+                 {"POS": "ADP", "DEP": "prep", "LOWER": "of"},
+                 {"POS": "NOUN"},
+                 {"OP": "*"}
+                 ]
+
+    matcher.add("inheritanceRelationPattern1",[inherRp1],greedy="LONGEST")
+    matcher.add("inheritanceRelationPattern2",[inherRp2],greedy="LONGEST")
+    matcher.add("inheritanceRelationPattern3",[inherRp3],greedy="LONGEST")
+    matcher.add("inheritanceRelationPattern4",[inherRp4],greedy="LONGEST")
+
+
+    sentences = helperFunctions.nlp ( sentences )
+
+    for sentence in sentences.sents:
+        matches = matcher ( sentence )
+        for match_id, start, end in matches:
+            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
+            span = sentence [ start:end ]  # The matched span
+            rels = [ ] #relations
+            classIs = ""
+            # print ( string_id )
+            skipnext = False
+            for I, token in enumerate ( span ):
+                if skipnext == True:
+                    skipnext = False
+                    continue
+                if string_id == "inheritanceRelationPattern1":
+                    text=""
+                    if token.pos_=="ADJ" and token.dep_=="amod":
+                        text = token.text+"_"
+                        if span[I+1].pos_ == "NOUN" and (span[I+1].dep_ == "attr" or span[I+1].dep_ == "conj"):
+                            text += span[I+1].text
+                            rels.append ( text )
+                            skipnext=True
+
+                    if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+
+                    elif token.pos_ == "NOUN" and token.dep_ == "pobj":
+                        classIs = token.text.lower ()
+                if string_id == "inheritanceRelationPattern2":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        rels.append ( token.text.lower() )
+                    elif token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
+                if string_id == "inheritanceRelationPattern3":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        rels.append ( token.text.lower () )
+                    elif token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
+                if string_id == "inheritanceRelationPattern4":
+                    if token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        rels.append ( token.text.lower () )
+                    elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
+
+            # remove duplicate
+            rels = list ( dict.fromkeys ( rels ) )
+            # bind relation to its class
+            if classIs != "":
+                IRelations [ classIs ] = rels
+
+
+
+    print ( "inheritance relations are :: ", IRelations )
+
+
+

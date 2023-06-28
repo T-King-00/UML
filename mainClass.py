@@ -119,8 +119,13 @@ if __name__ == '__main__':
 
     print ( "concept list : ", algorithm.conceptList )
 
-    algorithm.arules ( sentences2 )
+    algorithm.ExtractAttributes ( sentences2 )
+    algorithm.ExtractInheritanceR ( sentences2 )
 
+
+
+
+    #creating uml model and rendering picture for output
     filename = "other/classDiagram-1.txt"
     filename2 = "other/classDiagram-1.png"
     if os.path.exists ( filename ) and os.path.exists ( filename2 ):

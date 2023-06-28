@@ -68,15 +68,15 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="Name is required for every user"
+    sentence="student is a sub class of user . "
 
 
     #helperFunctions.displayRender(sentence)
     sent=helperFunctions.nlp(sentence)
     for word in sent:
         print(word.text,"  : "  , word.pos_,word.dep_, word.is_stop,"  :  " ,word.tag_,word.ent_type_)
-    findSynonyms("required")
-    for x in findSynonyms("required"):
+    findSynonyms("subclass")
+    for x in findSynonyms("subclass"):
         x=helperFunctions.nlp(x)
 
         print(x)

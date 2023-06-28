@@ -1,3 +1,4 @@
+Types of books are educational books ,fictional books and unfictional books.
 System shall be able to find books and manage books.
 Books include bible and other type of religous books.
 Library contains different categories of books .
@@ -5,6 +6,7 @@ System has Users and librarians and books.
 Name is unique within user .
 user should be able to view book online after logging in .
 User can reserve a book to borrow hard copy of a book.
+Student is a user .
 User should be able to  search for the required books .
 Details about user are name ,email, password and age,gender .
 User's details should be saved in database.
