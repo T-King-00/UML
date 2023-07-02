@@ -1,8 +1,12 @@
+Warranty belongs to a car
+office is made up of departments and employees.
+An office has departments.
 Types of books are educational books ,fictional books and unfictional books.
 System shall be able to find books and manage books.
 Books include bible and other type of religous books.
 Library contains different categories of books .
 System has Users and librarians and books.
+There are books in library.
 Name is unique within user .
 user should be able to view book online after logging in .
 User can reserve a book to borrow hard copy of a book.

@@ -28,22 +28,7 @@ from UserStory import UserStory
 from other.classRules import Extraction
 import algorithm
 
-"""
-def calculate_word_frequencies(sentences):
 
-    # Count the occurrences of each word
-    word_counts = Counter (
-        doc for doc in sentences )
-
-    # Calculate the total number of words
-    total_words = sum ( word_counts.values () )
-
-    # Calculate the frequency of each word
-    word_frequencies = {word: count / total_words for word, count in word_counts.items ()}
-
-    print("word fre "+ word_frequencies)
-    return word_frequencies
-"""
 
 if __name__ == '__main__':
 
@@ -120,8 +105,11 @@ if __name__ == '__main__':
     print ( "concept list : ", algorithm.conceptList )
 
     algorithm.ExtractAttributes ( sentences2 )
-    algorithm.ExtractInheritanceR ( sentences2 )
+    algorithm.ExtractMethods ( sentences2 )
 
+    algorithm.ExtractInheritanceR ( sentences2 )
+    algorithm.ExtractAggregationR ( sentences2 )
+    algorithm.ExtractCompositionR ( sentences2 )
 
 
 
@@ -136,23 +124,37 @@ if __name__ == '__main__':
 
     os.system ( "pip install plantuml" )
     classModel = plantUML.ClassModel ( filename )
-
+    #adding classes and attributes to model
     for classVar in algorithm.classes:
         classEntity = ClassEntity ( classVar )
         if classEntity.className in algorithm.attributes.keys():
             for x in algorithm.attributes [ classEntity.className ]:
                 classEntity.addAttributeToClass ( x )
         classModel.addClass ( classEntity.className )
-
         for att in classEntity.classAttributes:
             classModel.addMorFtoClass ( classEntity.className, att, '+' )
-
     for key in algorithm.attributes.keys ():
         if key not in algorithm.classes:
             classModel.addClass ( key )
-
             for att in algorithm.attributes [ key ]:
                 classModel.addMorFtoClass ( key, att, '+' )
+
+    # adding relationshions to model
+    for class1 in algorithm.IRelations.keys():
+        if class1 not in algorithm.classes:
+            classModel.addClass ( class1 )
+            for class2 in algorithm.IRelations [ class1 ]:
+                classModel.addExtensionRelation ( class1, class2)
+
+    # adding relationshions to model
+    for class1 in algorithm.AggRelations.keys ():
+        if class1 not in algorithm.classes:
+            classModel.addClass ( class1 )
+            for class2 in algorithm.AggRelations [ class1 ]:
+                classModel.addAggregationRelation ( class1, class2 )
+        else:
+            for class2 in algorithm.AggRelations [ class1 ]:
+                classModel.addAggregationRelation ( class1, class2 )
 
     classModel.closeFile ()
     os.system ( "python -m plantuml " + filename )
@@ -206,3 +208,19 @@ if __name__ == '__main__':
 # text.txt="place attribute here "
 # result=model.predict(text.txt)
 # model.getpredictedclass(result)
+"""
+def calculate_word_frequencies(sentences):
+
+    # Count the occurrences of each word
+    word_counts = Counter (
+        doc for doc in sentences )
+
+    # Calculate the total number of words
+    total_words = sum ( word_counts.values () )
+
+    # Calculate the frequency of each word
+    word_frequencies = {word: count / total_words for word, count in word_counts.items ()}
+
+    print("word fre "+ word_frequencies)
+    return word_frequencies
+"""

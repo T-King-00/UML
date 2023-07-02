@@ -15,7 +15,9 @@ conceptList = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
 attributes = {}
-IRelations={}
+IRelations = {}
+AggRelations = {}
+ComposRelations = {}
 
 
 def preprocess(text):
@@ -218,8 +220,8 @@ def findGeneralization():
             wordshyponyms [ concept ] = hyponyms
 
             # wordes having same meaning
-    print ( "synonyms of ", conceptList [ 1 ], wordsSynonyms [ conceptList [ 1 ] ] )
-    print ( "hypo of ", conceptList [ 1 ], wordshyponyms [ conceptList [ 1 ] ] )
+    print ( "synonyms of ", conceptList [ 0 ], wordsSynonyms [ conceptList [ 0 ] ] )
+    print ( "hypo of ", conceptList [ 0 ], wordshyponyms [ conceptList [ 0 ] ] )
 
     # words having is a relationship
     for outIndex, ct1 in enumerate ( conceptList ):
@@ -298,7 +300,7 @@ def ExtractAttributes(sentences):
               {"OP": "+"} ]
 
     # attribute pattern 3 : every ...  contains  .... , ..... .
-    attp3Verbs = [ "has", "have", "show", "shows", "contain", "contains", "include", "includes" ]
+    attp3Verbs = [ "show", "shows", "contain", "contains", "include", "includes" ]
     attp3 = [ {"POS": "DET", "OP": "*"}, {"POS": "NOUN"}, {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": attp3Verbs}},
               {"OP": "+"} ]
 
@@ -410,50 +412,49 @@ def ExtractInheritanceR(sentences):
     print ( "in ExtractInheritanceR():" )
     global IRelations
 
-
     matcher = Matcher ( helperFunctions.nlp.vocab )
-    #patterns
+    # patterns
     # inheritance pattern 1 : type of xxxxx  are xxxxxxx
-    #uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
+    # uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
     AUX = [ "are", "is" ]
-    TYPEWORD=["types","type"]
-    inherRp1= [ {"POS": "NOUN", "DEP": "nsubj" , "LOWER":{"IN": TYPEWORD }}, {"POS": "ADP","DEP":"prep" },
-                {"POS": "NOUN", "DEP": "pobj"},
-                {"POS": "AUX", "DEP": "ROOT" , "LOWER":{"IN": AUX}},
-                {"OP": "*"}
-              ]
+    TYPEWORD = [ "types", "type" ]
+    inherRp1 = [ {"POS": "NOUN", "DEP": "nsubj", "LOWER": {"IN": TYPEWORD}}, {"POS": "ADP", "DEP": "prep"},
+                 {"POS": "NOUN", "DEP": "pobj"},
+                 {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
+                 {"OP": "*"}
+                 ]
 
     # pattern 2 :  x is a xxx
     inherRp2 = [ {"POS": "NOUN", "DEP": "nsubj"},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
-                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": ["a","an"]}},
+                 {"LOWER": "either", "OP": "*"},
+                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]}},
                  {"POS": "NOUN"}
                  ]
 
     # pattern 3 :  .... could be a .... or ...
     inherRp3 = [ {"POS": "NOUN", "DEP": "nsubj"},
-                 {"POS": "AUX", "DEP": "aux", "LOWER": {"IN": ["may","can","could","might"]}},
-                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "be" },
-                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": ["a","an"]}},
-                 {"POS": "NOUN"},{"OP": "*"}
-                ]
+                 {"POS": "AUX", "DEP": "aux", "LOWER": {"IN": [ "may", "can", "could", "might" ]}},
+                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "be"},
+                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]}},
+                 {"POS": "NOUN"}, {"OP": "*"}
+                 ]
 
     # pattern 4 :  .... is a subclass of ....
     inherRp4 = [ {"POS": "NOUN", "DEP": "nsubj"},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
-                 {"POS": "DET", "DEP": "det", "LOWER": "a" },
-                 {"LOWER": "subclass" ,"DEP": "compound"},
+                 {"POS": "DET", "DEP": "det", "LOWER": "a"},
+                 {"LOWER": "subclass", "DEP": "compound"},
                  {"POS": "NOUN", "DEP": "attr", "LOWER": "class"},
                  {"POS": "ADP", "DEP": "prep", "LOWER": "of"},
                  {"POS": "NOUN"},
                  {"OP": "*"}
                  ]
 
-    matcher.add("inheritanceRelationPattern1",[inherRp1],greedy="LONGEST")
-    matcher.add("inheritanceRelationPattern2",[inherRp2],greedy="LONGEST")
-    matcher.add("inheritanceRelationPattern3",[inherRp3],greedy="LONGEST")
-    matcher.add("inheritanceRelationPattern4",[inherRp4],greedy="LONGEST")
-
+    matcher.add ( "inheritanceRelationPattern1", [ inherRp1 ], greedy="LONGEST" )
+    matcher.add ( "inheritanceRelationPattern2", [ inherRp2 ], greedy="LONGEST" )
+    matcher.add ( "inheritanceRelationPattern3", [ inherRp3 ], greedy="LONGEST" )
+    matcher.add ( "inheritanceRelationPattern4", [ inherRp4 ], greedy="LONGEST" )
 
     sentences = helperFunctions.nlp ( sentences )
 
@@ -462,7 +463,7 @@ def ExtractInheritanceR(sentences):
         for match_id, start, end in matches:
             string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
             span = sentence [ start:end ]  # The matched span
-            rels = [ ] #relations
+            rels = [ ]  # relations
             classIs = ""
             # print ( string_id )
             skipnext = False
@@ -471,13 +472,14 @@ def ExtractInheritanceR(sentences):
                     skipnext = False
                     continue
                 if string_id == "inheritanceRelationPattern1":
-                    text=""
-                    if token.pos_=="ADJ" and token.dep_=="amod":
-                        text = token.text+"_"
-                        if span[I+1].pos_ == "NOUN" and (span[I+1].dep_ == "attr" or span[I+1].dep_ == "conj"):
-                            text += span[I+1].text
+                    text = ""
+                    if token.pos_ == "ADJ" and token.dep_ == "amod":
+                        text = token.text + "_"
+                        if span [ I + 1 ].pos_ == "NOUN" and (
+                                span [ I + 1 ].dep_ == "attr" or span [ I + 1 ].dep_ == "conj"):
+                            text += span [ I + 1 ].text
                             rels.append ( text )
-                            skipnext=True
+                            skipnext = True
 
                     if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
                         rels.append ( token.text )
@@ -486,7 +488,7 @@ def ExtractInheritanceR(sentences):
                         classIs = token.text.lower ()
                 if string_id == "inheritanceRelationPattern2":
                     if token.pos_ == "NOUN" and token.dep_ == "nsubj":
-                        rels.append ( token.text.lower() )
+                        rels.append ( token.text.lower () )
                     elif token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
                         classIs = token.text.lower ()
                 if string_id == "inheritanceRelationPattern3":
@@ -504,11 +506,272 @@ def ExtractInheritanceR(sentences):
             rels = list ( dict.fromkeys ( rels ) )
             # bind relation to its class
             if classIs != "":
-                IRelations [ classIs ] = rels
-
-
-
+                try:
+                    if classIs in IRelations :
+                        newlist=[]
+                        for x in IRelations[classIs]:
+                           newlist.append(x)
+                        for x in rels:
+                            newlist.append(x)
+                        newlist = list ( dict.fromkeys ( newlist ) )
+                        IRelations[classIs]=newlist
+                    else:
+                        IRelations [ classIs ] = rels
+                except:
+                    print("key not found expection in inheritance r")
     print ( "inheritance relations are :: ", IRelations )
 
 
+# extract aggregation relation from previously specified patterns .
+def ExtractAggregationR(sentences):
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "in ExtractAggregationR():" )
+    global AggRelations
 
+    matcher = Matcher ( helperFunctions.nlp.vocab )
+    # patterns
+    # aggregation pattern 1 : there are xxxxx in a xxxxxx
+    AUX = [ "are", "is" ]
+    TYPEWORD = [ "types", "type" ]
+    aggRp1 = [ {"POS": "PRON", "DEP": "expl"}, {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": AUX}},
+               {"POS": "NOUN"},
+               {"POS": "ADP", "DEP": "prep", "LOWER": "in"},
+               {"OP": "*"}
+               ]
+
+    # aggregation pattern 2 : x has/have y . where x and y are both classes . x have instance of y
+    aggRp2 = [
+        {"POS": "DET ", "DEP": "det", "LOWER": {"IN": [ "an", "a" ]}, "OP": "*"},
+        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": [ "has", "have" ]}},
+        {"POS": "NOUN"}, {"OP": "*"}
+    ]
+    # aggregation pattern 3 : x comprise /involve y
+    verbsInvolve = [ "comprise", "involve", "carry", "hold", "embrace" ]
+    aggRp3 = [
+        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": verbsInvolve}},
+        {"POS": "NOUN"}, {"OP": "*"}
+    ]
+    # aggregation pattern 4 : x is made up of/by  y
+    aggRp4 = [
+        {"POS": "NOUN" },
+        {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": ["is","are"]}},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": "made"},
+        {"POS": "ADP", "DEP": "prt", "LOWER": "up"},
+        {"POS": "ADP", "DEP": "prep", "LOWER":{"IN": ["of","by"]}},
+        {"POS": "NOUN"}, {"OP": "*"}
+    ]
+
+    # aggregation pattern 5 : x is/are divded into/to made up of/by  y
+    verbDivdedSyn=["divided" , "cut" , "separated","splitted","craved","fractioned","subdivided"]
+    aggRp5 = [
+        {"POS": "DET ", "DEP": "det",  "OP": "*"},
+        {"POS": "NOUN" ,"DEP":"nsubjpass" },
+        {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": [ "is", "are" ]}},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": "divided"},
+        {"POS": "ADP", "DEP": "prep", "LOWER": "into" , "OP": "*"},
+        {"POS": "NOUN"}, {"OP": "*"}
+    ]
+
+    matcher.add ( "aggregationRelationPattern1", [ aggRp1 ], greedy="LONGEST" )
+    matcher.add ( "aggregationRelationPattern2", [ aggRp2 ], greedy="LONGEST" )
+    matcher.add ( "aggregationRelationPattern3", [ aggRp3 ], greedy="LONGEST" )
+    matcher.add ( "aggregationRelationPattern4", [ aggRp4 ], greedy="LONGEST" )
+    matcher.add ( "aggregationRelationPattern5", [ aggRp5 ], greedy="LONGEST" )
+
+    sentences = helperFunctions.nlp ( sentences )
+
+    for sentence in sentences.sents:
+        matches = matcher ( sentence )
+        for match_id, start, end in matches:
+            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
+            span = sentence [ start:end ]  # The matched span
+            rels = [ ]  # relations
+            classIs = ""
+            # print ( string_id )
+            skipnext = False
+            for I, token in enumerate ( span ):
+                if skipnext == True:
+                    skipnext = False
+                    continue
+                if string_id == "aggregationRelationPattern1":
+                    if token.pos_ == "NOUN" and (token.dep_ == "attr" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and token.dep_ == "pobj":
+                        classIs = token.text.lower ()
+                elif string_id == "aggregationRelationPattern2":
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        classIs = token.text.lower ()
+                elif string_id == "aggregationRelationPattern3":
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        classIs = token.text.lower ()
+                elif string_id == "aggregationRelationPattern4":
+                    if token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and token.dep_ == "nsubjpass":
+                        classIs = token.text.lower ()
+            # remove duplicate
+            rels = list ( dict.fromkeys ( rels ) )
+            # bind relation to its class
+            if classIs != "":
+                try:
+                    if classIs in AggRelations :
+                        newlist=[]
+                        for x in AggRelations[classIs]:
+                           newlist.append(x)
+                        for x in rels:
+                            newlist.append(x)
+                        newlist = list ( dict.fromkeys ( newlist ) )
+                        AggRelations[classIs]=newlist
+                    else:
+                        AggRelations[classIs] = rels
+                except:
+                    print("key not found expection in aggregation r")
+
+
+    print ( "Aggregation relations are :: ", AggRelations )
+
+
+# extract Composition relation from previously specified patterns .
+def ExtractCompositionR(sentences):
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "in ExtractCompositionR():" )
+    global ComposRelations
+
+    matcher = Matcher ( helperFunctions.nlp.vocab )
+    # patterns
+    # Composition pattern 1 : x is composed of/by y
+    AUX = [ "are", "is" ]
+    composRp1 = [
+        {"POS": "NOUN","DEP":"nsubjpass"},
+        {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": AUX}},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": "composed" },
+        {"POS": "ADP", "DEP": "prep", "LOWER": {"IN": ["of","by"]}},
+        {"POS": "NOUN"},
+        {"OP": "*"}
+            ]
+
+    # Composition pattern 2 : x is part of y
+    composRp2 = [
+        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
+        {"POS": "NOUN", "DEP": "attr", "LOWER": "part"},
+        {"POS": "ADP", "DEP": "prep", "LOWER": "of"} ,
+        {"POS": "NOUN"},
+        {"OP": "*"}
+    ]
+
+
+    # Composition pattern 3 : x belong/belongs to y
+    composRp3 = [
+        {"POS": "DET", "DEP": "det","OP":"*"},{"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "VERB ", "DEP": "ROOT", "LOWER": {"IN": ["belong","belongs"]}},
+        {"POS": "ADP", "DEP": "prep", "LOWER": "to"},
+        {"POS": "DET", "DEP": "det"},
+        {"POS": "NOUN"},
+        {"OP": "*"}
+    ]
+    # Composition pattern 4 : x is composite of y
+    composRp4 = [
+        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
+        {"POS": "ADJ ", "DEP": "acomp", "LOWER": "composite"},
+        {"POS": "ADP", "DEP": "prep", "LOWER": "of"},
+        {"POS": "NOUN"},
+        {"OP": "*"}
+    ]
+
+    # Composition pattern 5 : x have/has following parts of : y,c,v,b,n.
+    composRp5 = [
+        {"POS": "DET", "DEP": "det","OP":"*"},
+        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "VERB", "DEP": "ROOT" },
+        {"POS": "DET", "DEP": "det", "LOWER":"the"},
+        {"POS": "VERB", "DEP": "amod", "LOWER":"the"},
+        {"POS": "NOUN", "DEP": "dobj", "LOWER": "parts"},
+        {"POS": "PUNCT", "DEP": "punct"},
+        {"POS": "NOUN ", "DEP": "appos"},
+        {"OP": "*"}
+    ]
+
+    matcher.add ( "compositionRelationPattern1", [ composRp1 ], greedy="LONGEST" )
+    matcher.add ( "compositionRelationPattern2", [ composRp2 ], greedy="LONGEST" )
+    matcher.add ( "compositionRelationPattern3", [ composRp3 ], greedy="LONGEST" )
+    matcher.add ( "compositionRelationPattern4", [ composRp4 ], greedy="LONGEST" )
+    matcher.add ( "compositionRelationPattern5", [ composRp5 ], greedy="LONGEST" )
+
+
+    sentences = helperFunctions.nlp ( sentences )
+
+    for sentence in sentences.sents:
+        matches = matcher ( sentence )
+        for match_id, start, end in matches:
+            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
+            span = sentence [ start:end ]  # The matched span
+            rels = [ ]  # relations
+            classIs = ""
+            # print ( string_id )
+            skipnext = False
+            for I, token in enumerate ( span ):
+                if skipnext == True:
+                    skipnext = False
+                    continue
+                if string_id == "compositionRelationPattern1":
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
+                        classIs = token.text.lower ()
+                    elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                if string_id == "compositionRelationPattern2":
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
+                        rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                        classIs = token.text.lower ()
+                elif string_id == "compositionRelationPattern3":
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
+                            rels.append ( token.text )
+                    elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                            classIs = token.text.lower ()
+                elif string_id == "compositionRelationPattern4":
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
+                        classIs = token.text.lower ()
+                    elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+                elif string_id == "compositionRelationPattern5":
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
+                        classIs = token.text.lower ()
+                    elif token.pos_ == "NOUN" and (token.dep_ == "appos" or token.dep_ == "conj"):
+                        rels.append ( token.text )
+
+
+                        # remove duplicate
+            rels = list ( dict.fromkeys ( rels ) )
+            # bind relation to its class
+            if classIs != "":
+                try:
+                    if classIs in ComposRelations :
+                        newlist=[]
+                        for x in ComposRelations[classIs]:
+                           newlist.append(x)
+                        for x in rels:
+                            newlist.append(x)
+                        newlist = list ( dict.fromkeys ( newlist ) )
+                        ComposRelations[classIs]=newlist
+                    else:
+                        ComposRelations[classIs] = rels
+                except:
+                    print("key not found expection in composition r")
+
+
+    print ( "Composition relations are :: ", ComposRelations )
+
+
+
+def ExtractMethods(sentences):
+    print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
+    print ( "in ExtractMethods():" )
+    global ComposRelations

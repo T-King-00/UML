@@ -68,17 +68,17 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="student is a sub class of user . "
+    sentence="Car has the following parts: tyres , tanks , lamps and leds ."
+
 
 
     #helperFunctions.displayRender(sentence)
     sent=helperFunctions.nlp(sentence)
     for word in sent:
         print(word.text,"  : "  , word.pos_,word.dep_, word.is_stop,"  :  " ,word.tag_,word.ent_type_)
-    findSynonyms("subclass")
-    for x in findSynonyms("subclass"):
+    findSynonyms("composed")
+    for x in findSynonyms("composed"):
         x=helperFunctions.nlp(x)
-
         print(x)
 
 

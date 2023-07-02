@@ -84,8 +84,8 @@ class ClassModel ( PlantUml ):
     def addBinaryRelation(self, Class1, Class2):
         self.file.write ( f""" {Class1} -- {Class2} \n""" )
 
-    def addRealisationRelation(self, Class1, Class2):
-        self.file.write ( f""" {Class1} <|.. {Class2} \n""" )
+    def addExtensionRelation(self, Class1, Class2):
+        self.file.write ( f""" {Class1} <|-- {Class2} \n""" )
 
     def addAssociationRelation(self, Class1, Class2):
         self.file.write ( f""" {Class1} --> {Class2} \n""" )
