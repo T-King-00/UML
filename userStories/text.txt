@@ -1,28 +1,6 @@
-User can search for books based on title, date of publication  , author , find their location in the library.
-Librarian should be able to add new book to the database.
-Each Librarian have email and password to login.
-Details about user should be stored in database.
-librarian can add and remove new users.
-Librarian can add and manage the books.
-Librarian should be able to add new book to the database.
-A book is identified with title , author and publishing date ,version.
-The system should notify the user and librarian about the overdue books.
-The system calculates the fine for overdue books on their return.
-Warranty belongs to a car.
-office is made up of departments and employees.
-An office has departments.
-Types of books are educational books ,fictional books and unfictional books.
-System shall be able to find books and manage books.
-Books include bible and other type of religous books.
-Library contains different categories of books .
-System has Users and librarians and books.
-There are books in library.
-Name is unique within user .
-user should be able to view book online after logging in .
-User can reserve a book to borrow hard copy of a book.
-Student is a user .
-User should be able to  search for the required books .
-Details about user are name ,email, password and age,gender .
-User's details should be saved in database.
-Identifier is unique within librarian .
-I live in Egypt . John is my name . John is marcs friend.
+System has customer.
+there are products in an order.
+Every Customer has a web user .
+web user can make orders.
+payment is part of order .
+Details about customer are identifier,first name ,last name , address.

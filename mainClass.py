@@ -1,16 +1,3 @@
-###pipeline
-"""
-format of user story . As a ..... , i want to , so that   ...... .
-0-getting file
-1-file preproccessing (detection of line rules . starting of
-    sentence is as and middle word i want to ,so that and full stop .((not done yet))
-2-sentence separation . ()
-3-class entities        ()
-4-class atributes ()
-5-class relation ()
-5-drawing. (done)
-"""
-# ibraries
 import os
 
 from spacy.matcher import Matcher
@@ -20,9 +7,7 @@ from ClassEntity import ClassEntity
 from hellpingFiles.concept import getClassesFromFrequency2
 import helperFunctions
 import algorithm
-
-
-
+import uuid
 
 if __name__ == '__main__':
 
@@ -36,6 +21,14 @@ if __name__ == '__main__':
 
     sentences3 = algorithm.preprocess ( sentences2 )
     print ( sentences3 )
+
+    sentences4=algorithm.reduceSentences(sentences)
+    print("SENTENCE 4 : ", sentences4)
+    sentencesForRelations = ' '.join ( sentences4 )
+
+    sentencesForRelations = algorithm.preprocess ( sentencesForRelations )
+
+
     listOfSentences = sentences3.split ( "." )
 
     algorithm.stemmingWholeDocument ( listOfSentences )
@@ -61,19 +54,18 @@ if __name__ == '__main__':
 
     print ( "concept list : ", algorithm.conceptList )
 
-    algorithm.ExtractAttributes ( sentences2 )
-    algorithm.ExtractMethods ( sentences2 )
+    algorithm.ExtractAttributes ( sentencesForRelations )
+    algorithm.ExtractInheritanceR ( sentencesForRelations )
+    algorithm.ExtractAggregationR ( sentencesForRelations )
+    algorithm.ExtractCompositionR ( sentences3 )
+    algorithm.ExtractMethods ( sentencesForRelations )
+
     print(algorithm.methodsClasses)
 
-    algorithm.ExtractInheritanceR ( sentences2 )
-    algorithm.ExtractAggregationR ( sentences2 )
-    algorithm.ExtractCompositionR ( sentences2 )
-
-
-
     #creating uml model and rendering picture for output
-    filename = "other/classDiagram-1.txt"
-    filename2 = "other/classDiagram-1.png"
+    id=uuid.uuid4 ()
+    filename = f"diagrams/{id}.txt"
+    filename2 = f"diagrams/{id}.png"
     if os.path.exists ( filename ) and os.path.exists ( filename2 ):
         os.remove ( filename )
         os.remove ( filename2 )
@@ -95,26 +87,37 @@ if __name__ == '__main__':
             classModel.addMorFtoClass ( classEntity.className, att, '+' )
     for key in algorithm.attributes.keys ():
         if key not in algorithm.classes:
-            classModel.addClass ( key )
+            classModel.addClass ( key.lower() )
             for att in algorithm.attributes [ key ]:
                 classModel.addMorFtoClass ( key, att, '+' )
 
-    # adding relationshions to model
+    # adding Inheritance relationships to model
     for class1 in algorithm.IRelations.keys():
         if class1 not in algorithm.classes:
-            classModel.addClass ( class1 )
+            classModel.addClass ( class1.lower() )
             for class2 in algorithm.IRelations [ class1 ]:
                 classModel.addExtensionRelation ( class1, class2)
 
-    # adding relationshions to model
+    # adding aggregation relationships to model
     for class1 in algorithm.AggRelations.keys ():
         if class1 not in algorithm.classes:
-            classModel.addClass ( class1 )
+            classModel.addClass ( class1.lower()  )
             for class2 in algorithm.AggRelations [ class1 ]:
-                classModel.addAggregationRelation ( class1, class2 )
+                classModel.addAggregationRelation ( class1.lower() , class2 )
         else:
             for class2 in algorithm.AggRelations [ class1 ]:
                 classModel.addAggregationRelation ( class1, class2 )
+
+        # adding aggregation relationships to model
+    for class1 in algorithm.ComposRelations.keys ():
+        if class1 not in algorithm.classes:
+            classModel.addClass ( class1.lower()  )
+        for class2 in algorithm.ComposRelations [ class1 ]:
+            classModel.addCompositionRelation ( class1, class2 )
+    # adding methods to model
+    for class1 in algorithm.methodsClasses.keys ():
+        for method in algorithm.methodsClasses [ class1 ]:
+            classModel.addMorFtoClass ( class1,method,"+"  )
 
     classModel.closeFile ()
     os.system ( "python -m plantuml " + filename )

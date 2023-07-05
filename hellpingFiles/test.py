@@ -68,7 +68,7 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="As a librarian, I want to update book list."
+    sentence="web_user can make orders."
     sentence2="Member want to look up books by title."
 
 
