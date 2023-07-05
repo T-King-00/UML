@@ -277,6 +277,8 @@ def extractClassByRules():
             print ( "token text: ", tok.text, ", token type:", tok.ent_type_ )
             if tok.text.lower () in classes:
                 classes.remove ( tok.text.lower () )
+        if tok.dep_=="attr" and tok.text in classes:
+            classes.remove(tok.text)
 
     print ( " classes : ", classes )
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
@@ -295,8 +297,8 @@ def ExtractAttributes(sentences):
     AUX = [ "are", "is" ]
 
     # attribute pattern 1 : details about user are .......
-    DetailsSyn = [ "details", "data", "information" ]
-    attp1 = [ {"LOWER": {"IN": DetailsSyn}},
+    DetailsSyn = [ "detail", "data", "information" ]
+    attp1 = [ {"LEMMA": {"IN": DetailsSyn}},
               {"POS": "ADP"},
               {"POS": "NOUN"},
               {"POS": "AUX", "LOWER": {"IN": AUX}}, {"OP": "+"} ]
@@ -362,12 +364,23 @@ def ExtractAttributes(sentences):
                     skipnext = False
                     continue
                 if string_id == "attp1":
-                    if token.pos_ == "NOUN" and token.dep_ == "pobj":
+                    if token.pos_ == "NOUN" and token.dep_ == "pobj" :
                         classIs = token.text.lower ()
-                    for x in span.noun_chunks:
-                        if x.text == classIs and x.text in DetailsSyn:
+                    elif token.pos_=="PROPN" and token.dep_=="compound":
+                        if not token.text in atts:
+                            atts.append(token.text)
                             continue
-                        atts.append ( x.text )
+                    elif token.pos_=="NOUN" and token.dep_=="attr":
+                        atts.append ( token.text )
+                        continue
+                    for x in span.noun_chunks:
+                        if x.lemma_.lower() in DetailsSyn:
+                            continue
+                        else :
+                            if x.lemma_.lower() in classes :
+                                continue
+                            if not x.text in atts:
+                                atts.append ( x.text )
 
                 elif string_id == "attp2":
                     if (token.pos_ == "NOUN" or token.pos_ == "PROPN") and (

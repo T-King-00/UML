@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     print ( "concept list : ", algorithm.conceptList )
 
-    algorithm.ExtractAttributes ( sentencesForRelations )
+    algorithm.ExtractAttributes ( sentences3 )
     algorithm.ExtractInheritanceR ( sentencesForRelations )
     algorithm.ExtractAggregationR ( sentencesForRelations )
     algorithm.ExtractCompositionR ( sentences3 )

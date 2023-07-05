@@ -3,4 +3,4 @@ there are products in an order.
 Every Customer has a web user .
 web user can make orders.
 payment is part of order .
-Details about customer are identifier,first name ,last name , address.
+Details about customer are identifier, first name , last name , address.
