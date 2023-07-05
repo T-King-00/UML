@@ -13,6 +13,8 @@ format of user story . As a ..... , i want to , so that   ...... .
 from pprint import pprint
 
 import classExtraction
+
+import algorithm
 import helperFunctions
 from ClassEntity import ClassEntity
 from hellpingFiles import concept
@@ -28,8 +30,8 @@ if __name__ == '__main__':
 
     # removes determinants , aux verbs and adjectives.
 
-    sentencesPreprocessed=helperFunctions.preprocess(sentences)
-    sentences1=helperFunctions.reduceSentences(sentences)
+    sentencesPreprocessed= algorithm.preprocess1 ( sentences )
+    sentences1= algorithm.reduceSentences ( sentences )
     pprint(sentences1)
     classesFromFreq=concept.getClassesFromFrequency ( sentences )
 

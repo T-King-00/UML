@@ -41,15 +41,15 @@ class UserStory ():
 
         return actors
 
-
-
     #extracts main use case of a sentence
-    def extractUseCase(sentence):
+    def extractUseCase(sentence1):
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print("in extractusecase()")
         global actors
         #helperFunctions.displayRender(sentence)
-        doc=helperFunctions.nlp(sentence)
-        actorName = UserStory.extractActor ( sentence )
-
+        doc=helperFunctions.nlp(sentence1)
+        actorName = UserStory.extractActor ( sentence1 )
+        index = -1
         foundActor = [ actorExtracted for actorExtracted in actors if actorName.name == actorExtracted.name ]
         if foundActor.__len__ () != 0:
             index = -1
@@ -58,25 +58,35 @@ class UserStory ():
                     index = i
                     break
         verb=None
+        usecase=None
         usecases=[]
-        for sentence in doc.sents:
+        for i,sentence in enumerate(doc.sents):
             #if the root verb is want search for another the xcomp which is next to root.
-            if sentence.root.lemma_=="want":
+            helperFunctions.printtags(sentence1)
+            if sentence.root.lemma_=="want" :
                 for tok in doc:
-                    if tok.pos_=="VERB" and tok.dep_=="xcomp":
+                    if tok.pos_=="VERB" and (tok.dep_=="xcomp" or tok.dep_=="advcl"):
                         verb=tok
                         print ( "sentence xcomp verb", tok.lemma_ )
-                        continue
+                        break
+            elif sentence.root.is_space==True :
+                for tok in doc:
+                    if tok.pos_=="VERB" and (tok.dep_=="xcomp" or tok.dep_=="advcl"):
+                        if tok.lemma_=="want" or tok.lemma_=="be":
+                            continue
+                        verb=tok
+                        print ( "sentence xcomp verb", tok.lemma_ )
+                        break
             else :
                 print ( "sentence root", sentence.root )
                 verb = sentence.root;
 
+
         #gets object , and then object dependents
-        object=""
+        object=" "
         if verb!=None:
             object=spacy_utils.get_objects_of_verb(verb)
         #if object is founnd , get dependents.
-
         if len(object):
             object_dependents = [ token for token in object[0].subtree if token.i > object[0].i ]
             object_dependents_Txt = [ token.text for token in object[0].subtree if token.i > object[0].i ]
@@ -90,33 +100,29 @@ class UserStory ():
             object_dependents=[]
 
 
-        print ( usecase )
+        print ("usecase is : ", usecase )
 
         #write if condition for token after verb to see if it aftr or on or of or any other prepositions
             # get verb dependents which can be  another use case .
         usecase2 = UserStory.extractDependencyUseCase ( sentence, verb, object_dependents )
         if usecase2 is not None:
+                print ( "usecase2 is : ", usecase2 )
                 usecases.append ( usecase2 )
                 actors[index].addUseCase ( usecase2 )
-
                 usecases.append ( usecase )
                 actors[index].addUseCase ( usecase )
                 actors[index].addDependency ( usecase, usecase2 )
         else:
             prepphrase=UserStory.extract_verb_and_prep_phrase(doc)
-            if prepphrase!=None:
+            if prepphrase!=None and  prepphrase:
                 if re.search ( prepphrase, usecase ):
                     usecase = usecase
                 else :
                     usecase=usecase +" " + prepphrase
+
             usecases.append ( usecase )
             actors[index].addUseCase ( usecase )
-
-
         return usecases,actors[index]
-
-
-
 
     def extractDependencyUseCase(sentence, verb, object_dependents):
             # two cases : if there is object dependents , if not .
@@ -148,14 +154,6 @@ class UserStory ():
                             return usecase2
 
                 # get what comes after this dependent word .
-
-
-
-
-
-
-
-
     def extract_verb_and_prep_phrase(doc):
         root_verb = ''
         prep_phrase = ''
@@ -177,6 +175,7 @@ class UserStory ():
 
         return  prep_phrase
 
+
     def extractCase(sentence):
         UserStory.extractU ( sentence )
         matcher = Matcher ( helperFunctions.nlp.vocab )
@@ -186,8 +185,6 @@ class UserStory ():
         actor = UserStory.extractActor ( sentence )
        #  x = helperFunctions.nlp ( sentence )
        #  # verb det noun ,, verb the noun
-       #
-       #
        #  pattern000=[ {"POS": "VERB"}, {"POS": "NOUN"}]
        #  pattern00 =[ {"POS": "VERB"}, {"POS": "NOUN"}, {"POS": "ADP", "OP": "!"}, {"POS": "NOUN", "OP": "!"}]
        #
@@ -234,7 +231,6 @@ class UserStory ():
        #          compoundVerbs.append ( span )
        #      if span is not None:  # to get only the fist part of use case .
        #          break
-       #
        #  pprint ( compoundVerbs )
         compoundVerbs = list ( dict.fromkeys ( compoundVerbs ) )
         return compoundVerbs, actor

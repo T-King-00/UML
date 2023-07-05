@@ -26,6 +26,8 @@ class UseCaseModel ( PlantUml ):
 
     def addUseCasetoActor(self, actorName, useCaseName):
         self.file.write ( f""" :{actorName}: --> ({useCaseName})\n""" )
+    def addUseCasetoActorLeftSide(self, actorName, useCaseName):
+            self.file.write ( f""" :{actorName}: -left-> ({useCaseName})\n""" )
 
     def addUseCase2toUseCase1(self, usecase1, usecase2):
         self.file.write ( f""" ({usecase1}) .> ({usecase2}) : include \n""" )

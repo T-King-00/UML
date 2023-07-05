@@ -1,0 +1,10 @@
+As a user,i can add my credit to pay so that order is completed.
+As a user,i can view list of products for sale so that i can decide which products to buy.
+As a user,i want to add items to cart so that i can check them out.
+As a user,i can checkout products after paying by card.
+As a user,i can delete products from cart so that i donot check them out.
+As an admin ,i can add new products so that products are updated.
+As an admin , i want to add new product to list of products .
+As an admin , i can mark products as out of stock until they are refilled.
+As an admin , i can change product details or price .
+As an admin , i can delete product out of stock.

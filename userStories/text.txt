@@ -1,4 +1,14 @@
-Warranty belongs to a car
+User can search for books based on title, date of publication  , author , find their location in the library.
+Librarian should be able to add new book to the database.
+Each Librarian have email and password to login.
+Details about user should be stored in database.
+librarian can add and remove new users.
+Librarian can add and manage the books.
+Librarian should be able to add new book to the database.
+A book is identified with title , author and publishing date ,version.
+The system should notify the user and librarian about the overdue books.
+The system calculates the fine for overdue books on their return.
+Warranty belongs to a car.
 office is made up of departments and employees.
 An office has departments.
 Types of books are educational books ,fictional books and unfictional books.
@@ -15,14 +25,4 @@ User should be able to  search for the required books .
 Details about user are name ,email, password and age,gender .
 User's details should be saved in database.
 Identifier is unique within librarian .
-User can search for books based on title, date of publication  , author , find their location in the library.
-Librarian should be able to add new book to the database.
-Each Librarian have email and password to login.
-Details about user should be stored in database.
-librarian can add and remove new users.
-Librarian can add and manage the books.
-Librarian should be able to add new book to the database.
-A book is identified with title , author and publishing date ,version.
-The system should notify the user and librarian about the overdue books.
-The system calculates the fine for overdue books on their return.
-I live in Egypt .John is my name . John is marcs friend.
+I live in Egypt . John is my name . John is marcs friend.

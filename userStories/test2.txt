@@ -1,0 +1,38 @@
+As a customer, I want to see my borrows.
+As a customer, I want to see my borrows.
+As a customer, I want to see book categories.
+As a customer, I want to see the availability of books.
+As a customer, I want to reserve a book.
+As a customer, I want to delete book recomendation.
+As a customer, I want to create my borrows
+As a librarian, I want to add new members.
+As a librarian, I want to add new books so that members can see new books.
+As a librarian, I want to add new books to book list.
+As a librarian, I want to add books to the library.
+As a librarian, I want to be able to add new members
+As a librarian, I want to be able to calculate fees for delayed book returns
+As a librarian, I want to be able to see the list of overdue books.
+As a librarian, I want to be able to update members subscription plans.
+As a librarian, I want to be able to update the status of a book as checked-out during check-out.
+As a librarian, I want to block unwanted members.
+As a librarian, I want to calculate the fee for delayed book returns.
+As a librarian, I want to chat with users.
+As a librarian, I want to check the maintenance dates of the books so that I can periodically.
+As a librarian, I want to check the number of books available for borrowing.
+As a librarian, I want to create book list.
+As a librarian, I want to create information about borrowed books.
+As a librarian, I want to create pages for book information.
+As a librarian, I want to delete books from the library.
+As a librarian, I want to delete information about borrowed books.
+As a librarian, I want to delete members.
+As a librarian, I want to detect unreturned books so that I can reject members.
+As a librarian, I want to edit a member subscription.
+As a librarian, I want to edit book list.
+As a librarian, I want to edit current books shelf information.
+As a librarian, I want to edit details about books and their locations.
+As a librarian, I want to edit list of borrowed books.
+As a librarian, I want to see late returns.
+As a librarian, I want to update book list.
+As a customer, I want to delete my borrows.
+As a customer, I want to update my borrows.
+As a customer, I want to make book recomendation.

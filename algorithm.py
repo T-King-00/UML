@@ -1,8 +1,10 @@
-import regex
-from spacy.matcher import matcher
-from spacy import matcher
-from spacy.matcher import Matcher, DependencyMatcher
+import re
 
+from helperFunctions import nlp
+import regex
+from docutils.nodes import label
+from spacy.matcher import Matcher, DependencyMatcher
+from textacy.spacier import utils as spacy_utils
 import helperFunctions
 import nltk
 from nltk.corpus import wordnet
@@ -12,12 +14,14 @@ sentencesWithoutSW = {}
 stopwordsList = [ ]
 tokens = [ ]
 conceptList = [ ]
+concepts_Tokens = [ ]
 noun_phrases = [ ]
 stopwordsFound = [ ]
 attributes = {}
 IRelations = {}
 AggRelations = {}
 ComposRelations = {}
+methodsClasses = {}
 
 
 def preprocess(text):
@@ -247,7 +251,7 @@ classes = [ ]
 
 
 # class extraction rules :
-def crule2():
+def extractClassByRules():
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     print ( "class extraction from concepts:" )
     specific_indicators = {"type", "number", "date", "reference", "no", "code", "volume", "birth", "id", "address",
@@ -507,18 +511,18 @@ def ExtractInheritanceR(sentences):
             # bind relation to its class
             if classIs != "":
                 try:
-                    if classIs in IRelations :
-                        newlist=[]
-                        for x in IRelations[classIs]:
-                           newlist.append(x)
+                    if classIs in IRelations:
+                        newlist = [ ]
+                        for x in IRelations [ classIs ]:
+                            newlist.append ( x )
                         for x in rels:
-                            newlist.append(x)
+                            newlist.append ( x )
                         newlist = list ( dict.fromkeys ( newlist ) )
-                        IRelations[classIs]=newlist
+                        IRelations [ classIs ] = newlist
                     else:
                         IRelations [ classIs ] = rels
                 except:
-                    print("key not found expection in inheritance r")
+                    print ( "key not found expection in inheritance r" )
     print ( "inheritance relations are :: ", IRelations )
 
 
@@ -555,22 +559,22 @@ def ExtractAggregationR(sentences):
     ]
     # aggregation pattern 4 : x is made up of/by  y
     aggRp4 = [
-        {"POS": "NOUN" },
-        {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": ["is","are"]}},
+        {"POS": "NOUN"},
+        {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": [ "is", "are" ]}},
         {"POS": "VERB", "DEP": "ROOT", "LOWER": "made"},
         {"POS": "ADP", "DEP": "prt", "LOWER": "up"},
-        {"POS": "ADP", "DEP": "prep", "LOWER":{"IN": ["of","by"]}},
+        {"POS": "ADP", "DEP": "prep", "LOWER": {"IN": [ "of", "by" ]}},
         {"POS": "NOUN"}, {"OP": "*"}
     ]
 
     # aggregation pattern 5 : x is/are divded into/to made up of/by  y
-    verbDivdedSyn=["divided" , "cut" , "separated","splitted","craved","fractioned","subdivided"]
+    verbDivdedSyn = [ "divided", "cut", "separated", "splitted", "craved", "fractioned", "subdivided" ]
     aggRp5 = [
-        {"POS": "DET ", "DEP": "det",  "OP": "*"},
-        {"POS": "NOUN" ,"DEP":"nsubjpass" },
+        {"POS": "DET ", "DEP": "det", "OP": "*"},
+        {"POS": "NOUN", "DEP": "nsubjpass"},
         {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": [ "is", "are" ]}},
         {"POS": "VERB", "DEP": "ROOT", "LOWER": "divided"},
-        {"POS": "ADP", "DEP": "prep", "LOWER": "into" , "OP": "*"},
+        {"POS": "ADP", "DEP": "prep", "LOWER": "into", "OP": "*"},
         {"POS": "NOUN"}, {"OP": "*"}
     ]
 
@@ -620,19 +624,18 @@ def ExtractAggregationR(sentences):
             # bind relation to its class
             if classIs != "":
                 try:
-                    if classIs in AggRelations :
-                        newlist=[]
-                        for x in AggRelations[classIs]:
-                           newlist.append(x)
+                    if classIs in AggRelations:
+                        newlist = [ ]
+                        for x in AggRelations [ classIs ]:
+                            newlist.append ( x )
                         for x in rels:
-                            newlist.append(x)
+                            newlist.append ( x )
                         newlist = list ( dict.fromkeys ( newlist ) )
-                        AggRelations[classIs]=newlist
+                        AggRelations [ classIs ] = newlist
                     else:
-                        AggRelations[classIs] = rels
+                        AggRelations [ classIs ] = rels
                 except:
-                    print("key not found expection in aggregation r")
-
+                    print ( "key not found expection in aggregation r" )
 
     print ( "Aggregation relations are :: ", AggRelations )
 
@@ -648,29 +651,28 @@ def ExtractCompositionR(sentences):
     # Composition pattern 1 : x is composed of/by y
     AUX = [ "are", "is" ]
     composRp1 = [
-        {"POS": "NOUN","DEP":"nsubjpass"},
+        {"POS": "NOUN", "DEP": "nsubjpass"},
         {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": AUX}},
-        {"POS": "VERB", "DEP": "ROOT", "LOWER": "composed" },
-        {"POS": "ADP", "DEP": "prep", "LOWER": {"IN": ["of","by"]}},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": "composed"},
+        {"POS": "ADP", "DEP": "prep", "LOWER": {"IN": [ "of", "by" ]}},
         {"POS": "NOUN"},
         {"OP": "*"}
-            ]
+    ]
 
     # Composition pattern 2 : x is part of y
     composRp2 = [
         {"POS": "NOUN", "DEP": "nsubj"},
         {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
         {"POS": "NOUN", "DEP": "attr", "LOWER": "part"},
-        {"POS": "ADP", "DEP": "prep", "LOWER": "of"} ,
+        {"POS": "ADP", "DEP": "prep", "LOWER": "of"},
         {"POS": "NOUN"},
         {"OP": "*"}
     ]
 
-
     # Composition pattern 3 : x belong/belongs to y
     composRp3 = [
-        {"POS": "DET", "DEP": "det","OP":"*"},{"POS": "NOUN", "DEP": "nsubj"},
-        {"POS": "VERB ", "DEP": "ROOT", "LOWER": {"IN": ["belong","belongs"]}},
+        {"POS": "DET", "DEP": "det", "OP": "*"}, {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": "VERB ", "DEP": "ROOT", "LOWER": {"IN": [ "belong", "belongs" ]}},
         {"POS": "ADP", "DEP": "prep", "LOWER": "to"},
         {"POS": "DET", "DEP": "det"},
         {"POS": "NOUN"},
@@ -688,11 +690,11 @@ def ExtractCompositionR(sentences):
 
     # Composition pattern 5 : x have/has following parts of : y,c,v,b,n.
     composRp5 = [
-        {"POS": "DET", "DEP": "det","OP":"*"},
+        {"POS": "DET", "DEP": "det", "OP": "*"},
         {"POS": "NOUN", "DEP": "nsubj"},
-        {"POS": "VERB", "DEP": "ROOT" },
-        {"POS": "DET", "DEP": "det", "LOWER":"the"},
-        {"POS": "VERB", "DEP": "amod", "LOWER":"the"},
+        {"POS": "VERB", "DEP": "ROOT"},
+        {"POS": "DET", "DEP": "det", "LOWER": "the"},
+        {"POS": "VERB", "DEP": "amod", "LOWER": "the"},
         {"POS": "NOUN", "DEP": "dobj", "LOWER": "parts"},
         {"POS": "PUNCT", "DEP": "punct"},
         {"POS": "NOUN ", "DEP": "appos"},
@@ -704,7 +706,6 @@ def ExtractCompositionR(sentences):
     matcher.add ( "compositionRelationPattern3", [ composRp3 ], greedy="LONGEST" )
     matcher.add ( "compositionRelationPattern4", [ composRp4 ], greedy="LONGEST" )
     matcher.add ( "compositionRelationPattern5", [ composRp5 ], greedy="LONGEST" )
-
 
     sentences = helperFunctions.nlp ( sentences )
 
@@ -722,20 +723,20 @@ def ExtractCompositionR(sentences):
                     skipnext = False
                     continue
                 if string_id == "compositionRelationPattern1":
-                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
                         classIs = token.text.lower ()
                     elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
                         rels.append ( token.text )
                 if string_id == "compositionRelationPattern2":
-                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
                         rels.append ( token.text )
                     elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
                         classIs = token.text.lower ()
                 elif string_id == "compositionRelationPattern3":
-                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj") :
-                            rels.append ( token.text )
+                    if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
+                        rels.append ( token.text )
                     elif token.pos_ == "NOUN" and (token.dep_ == "pobj" or token.dep_ == "conj"):
-                            classIs = token.text.lower ()
+                        classIs = token.text.lower ()
                 elif string_id == "compositionRelationPattern4":
                     if token.pos_ == "NOUN" and (token.dep_ == "nsubjpass" or token.dep_ == "nsubj"):
                         classIs = token.text.lower ()
@@ -747,31 +748,221 @@ def ExtractCompositionR(sentences):
                     elif token.pos_ == "NOUN" and (token.dep_ == "appos" or token.dep_ == "conj"):
                         rels.append ( token.text )
 
-
                         # remove duplicate
             rels = list ( dict.fromkeys ( rels ) )
             # bind relation to its class
             if classIs != "":
                 try:
-                    if classIs in ComposRelations :
-                        newlist=[]
-                        for x in ComposRelations[classIs]:
-                           newlist.append(x)
+                    if classIs in ComposRelations:
+                        newlist = [ ]
+                        for x in ComposRelations [ classIs ]:
+                            newlist.append ( x )
                         for x in rels:
-                            newlist.append(x)
+                            newlist.append ( x )
                         newlist = list ( dict.fromkeys ( newlist ) )
-                        ComposRelations[classIs]=newlist
+                        ComposRelations [ classIs ] = newlist
                     else:
-                        ComposRelations[classIs] = rels
+                        ComposRelations [ classIs ] = rels
                 except:
-                    print("key not found expection in composition r")
-
+                    print ( "key not found expection in composition r" )
 
     print ( "Composition relations are :: ", ComposRelations )
-
 
 
 def ExtractMethods(sentences):
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     print ( "in ExtractMethods():" )
-    global ComposRelations
+    global methodsClasses
+    verb = None
+    sentences = helperFunctions.nlp ( sentences )
+    for sentence in sentences.sents:
+        print ( "another sentence ###############" )
+        classIs = ""
+        methods = [ ]
+        # get the subject , (class)
+        isTruePerson = False
+        isTrueClass = False
+
+
+        if (sentence[0].pos_ == "PROPN" or sentence[0].pos_=="NOUN") and sentence[0].dep_ == "nsubj":
+            isTruePerson = ispersonOrLocation ( sentence[0] )
+            if not isTruePerson:
+                print(sentence[0].text.lower())
+                classIs = sentence[0].text
+
+
+
+
+
+        # get the method
+
+        # if the root verb is want search for another the xcomp which is next to root.
+        verbs = [ "belong", "be", "have", "own", "include", "contain", "save" ]
+        if sentence.root.lemma_ == "want":
+            for tok in sentence:
+                if tok.pos_ == "VERB" and tok.dep_ == "xcomp":
+                    verb = tok
+                    print ( "sentence xcomp verb", tok.lemma_ )
+                    continue
+        elif sentence.root.lemma_ in verbs:
+            if sentence.root.pos_ == "AUX":
+                for tok in sentence:
+                    if tok.pos_ == "VERB":
+                        verb = tok
+                        break
+            else:
+                continue
+        else:
+            print ( "sentence root", sentence.root )
+            verb = sentence.root
+
+        # gets object , and then object dependents
+        object = " "
+        if verb != None:
+            pobj = ""
+            object = spacy_utils.get_objects_of_verb ( verb )
+            print ( "object is :", object )
+            if not len ( object ):
+                for tok in sentence:
+                    if tok.pos_ == "pobj" or tok.pos_ == "dobj":
+                        object = tok
+                        break
+
+
+        else:
+            continue
+
+            # if object is founnd , get dependents.
+        method = ""
+        if len ( object ):
+            object_dependents = [ token for token in object [ 0 ].subtree if token.i > object [ 0 ].i ]
+            object_dependents_Txt = [ token.text for token in object [ 0 ].subtree if token.i > object [ 0 ].i ]
+            print ( "object dependents", object_dependents_Txt )
+            if len ( object_dependents ):
+                if object_dependents_Txt [ 0 ] != "to":
+                    method = verb.text + " " + object [ 0 ].text + ' ' + " ".join ( object_dependents_Txt )
+                else:
+                    method = verb.text + " " + object [ 0 ].text
+            else:
+                method = verb.text + " " + object [ 0 ].text
+
+        else:
+            method = verb.text
+            object_dependents = [ ]
+
+        print ( "method is ", method )
+        methods.append ( method )
+
+
+        if classIs != "" and isTruePerson!= True:
+            try:
+                if classIs in methodsClasses:
+                    newlist = [ ]
+                    for x in methodsClasses [ classIs ]:
+                        newlist.append ( x.lower () )
+                    for x in methods:
+                        newlist.append ( x.lower () )
+                    newlist = list ( dict.fromkeys ( newlist ) )
+                    methodsClasses [ classIs ] = newlist
+                else:
+                    methodsClasses [ classIs ] = methods
+            except:
+                print ( "key not found expection in methods fn " )
+            print(methodsClasses [ classIs ])
+
+
+def concept(listOfSentences):
+    # storing concepts InFormOftokens
+    global conceptList
+    global concepts_Tokens
+    # find concepts from noun phrases
+    i = 0
+
+    for nounphrase in noun_phrases:
+
+        np = helperFunctions.nlp ( nounphrase )
+        stringNP = ""
+        for doc in np:
+            if not doc.is_stop and not doc.is_space:
+                if (doc.pos_ == "NOUN" or doc.pos_ == "PROPN"):
+                    stringNP += doc.lemma_.lower ()
+                    concepts_Tokens.append ( doc )
+
+        i = i + 1
+        conceptList.append ( stringNP )
+    # removing duplicates
+    conceptList = list ( dict.fromkeys ( conceptList ) )
+    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
+    print ( "concept tokens ", concepts_Tokens )
+    # to get other forms of noun phrases
+    matcher = Matcher ( helperFunctions.nlp.vocab )
+    pattern0 = [ {"POS": "NOUN"}, {"POS": "ADP"}, {"POS": "NOUN"} ]
+    matcher.add ( "noun_det_noun", [ pattern0 ] )
+    for sent in listOfSentences:
+        sentencenlp = helperFunctions.nlp ( sent )
+        matches = matcher ( sentencenlp )
+        for match_id, start, end in matches:
+            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
+            span = sentencenlp [ start:end ]  # The matched span
+            # add to concept list
+            conceptList.append ( span.text )
+            concepts_Tokens.append ( span )
+
+    # removing duplicates
+    conceptList = list ( dict.fromkeys ( conceptList ) )
+    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
+    return concepts_Tokens
+
+
+def ispersonOrLocation(tok):
+    if tok.ent_type_ == "PERSON" or tok.ent_type_ == "GPE":
+        print ( "token text: ", tok.text, ", token type:", tok.ent_type_ )
+        return True
+    else:
+        return False
+
+
+def reduceSentence(original_sentence):
+    # Parse the original sentence
+
+    doc = nlp ( original_sentence )
+    # Create a list of the parts of speech to remove
+    pos_to_remove = [ "DET", "ADJ", "AUX" ]
+    # Create a list of the tokens that should be kept
+    tokens_to_keep = [ token for token in doc if token.pos_ not in pos_to_remove ]
+    # Join the remaining tokens into a simplified sentence
+    simplified_sentence = " ".join ( [ token.text for token in tokens_to_keep ] )
+    # Print the simplified sentence
+    print ( "After reducing sentence :: ", simplified_sentence )
+    return nlp ( simplified_sentence )
+
+
+def reduceSentences(original_sentences):
+    # Parse the original sentence
+    reduced_sentences = [ ]
+    for sentence in original_sentences:
+        doc = nlp ( sentence )
+        # Create a list of the parts of speech to remove
+
+        pos_to_remove = [  "ADJ" ]
+        # Create a list of the tokens that should be kept
+        tokens_to_keep = [ token for token in doc if token.pos_ not in pos_to_remove ]
+        # Join the remaining tokens into a simplified sentence
+        simplified_sentence = " ".join ( [ token.text for token in tokens_to_keep ] )
+        # Print the simplified sentence
+        # print ( "After reducing sentence :: ", simplified_sentence )
+        reduced_sentences.append ( simplified_sentence )
+    return reduced_sentences
+
+
+def preprocess1(sentences):
+    for i, sentence in enumerate ( sentences ):
+        #remove all punctuations except , and '
+        regex = r"[!\"#\$%&\\(\)\*\+-\./:;<=>\?@\[\\\]\^_`{\|}~”“]"
+        # r'[^\w\s]'
+
+        sentences [ i ] = re.sub( regex, '', sentence )  # Remove punctuation
+        sentences [ i ] = sentence.replace ( '\n', '' )  # Remove newline
+        #print ( sentences [ 1 ] )
+
+    return sentences

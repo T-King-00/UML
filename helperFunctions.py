@@ -1,9 +1,4 @@
-import os
-import re
-from pathlib import Path
-
 import requests
-from IPython.core.display import SVG, display, HTML
 from nltk.corpus import wordnet
 from spacy.language import Language
 import spacy
@@ -38,48 +33,7 @@ def getSentencesFromFile(file):
 
     return sentences
 
-
 ###function removes auxiliary verbs , determinants , and adjectives .
-def reduceSentence(original_sentence):
-    # Parse the original sentence
-
-    doc = nlp ( original_sentence )
-    # Create a list of the parts of speech to remove
-    pos_to_remove = [ "DET", "ADJ", "AUX" ]
-    # Create a list of the tokens that should be kept
-    tokens_to_keep = [ token for token in doc if token.pos_ not in pos_to_remove ]
-    # Join the remaining tokens into a simplified sentence
-    simplified_sentence = " ".join ( [ token.text for token in tokens_to_keep ] )
-    # Print the simplified sentence
-    print ( "After reducing sentence :: ", simplified_sentence )
-    return nlp ( simplified_sentence )
-def reduceSentences(original_sentences):
-    # Parse the original sentence
-    reduced_sentences = [ ]
-    for sentence in original_sentences:
-        doc = nlp ( sentence )
-        # Create a list of the parts of speech to remove
-
-        pos_to_remove = [  "ADJ" ]
-        # Create a list of the tokens that should be kept
-        tokens_to_keep = [ token for token in doc if token.pos_ not in pos_to_remove ]
-        # Join the remaining tokens into a simplified sentence
-        simplified_sentence = " ".join ( [ token.text for token in tokens_to_keep ] )
-        # Print the simplified sentence
-        # print ( "After reducing sentence :: ", simplified_sentence )
-        reduced_sentences.append ( simplified_sentence )
-    return reduced_sentences
-def preprocess(sentences):
-    for i, sentence in enumerate ( sentences ):
-        #remove all punctuations except , and '
-        regex = r"[!\"#\$%&\\(\)\*\+-\./:;<=>\?@\[\\\]\^_`{\|}~”“]"
-        # r'[^\w\s]'
-
-        sentences [ i ] = re.sub( regex, '', sentence )  # Remove punctuation
-        sentences [ i ] = sentence.replace ( '\n', '' )  # Remove newline
-        #print ( sentences [ 1 ] )
-
-    return sentences
 
 def getFileByUrl(fileURL):
     response = requests.get ( fileURL )
@@ -87,10 +41,12 @@ def getFileByUrl(fileURL):
     file = response.text
     return file
 
-
-def getFile():
-    with open ( 'userStories/text.txt',encoding= 'utf-8') as f:
+def getFile(filename):
+    with open ( filename,encoding= 'utf-8') as f:
         return f.read()
+
+
+
 
 def getAllNouns(sentence):
     ##### nouns
@@ -149,12 +105,11 @@ def get_token_sentences(sentences):
 def printtags(sent):
     sent = nlp ( sent )
     for token in sent:
-        print ( "token:", token.text, "  token pos", token.pos_ )
+        print ( "token:", token.text, "  token pos", token.pos_ ,":: token dep", token.dep_ )
 
 
 def findSynonyms(word):
     wordsSynonyms = {}
-    # Finding synonym
     synonums = [ ]
     for stn in wordnet.synsets ( word ):
         for l in stn.lemmas ():
@@ -181,6 +136,5 @@ def findSynonyms(word):
         wordsSynonyms [ word ] = synonums
 
     print ( "synonyms of ", word, wordsSynonyms [ word ] )
-
     return synonums
 

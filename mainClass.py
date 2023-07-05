@@ -12,30 +12,24 @@ format of user story . As a ..... , i want to , so that   ...... .
 """
 # ibraries
 import os
-import pickle
-import string
-from collections import OrderedDict, Counter
-from pprint import pprint
 
 from spacy.matcher import Matcher
 
 import plantUML
 from ClassEntity import ClassEntity
-from hellpingFiles.concept import getClassesFromFrequency, getClassesFromFrequency2
-from multilabelmodel import model
+from hellpingFiles.concept import getClassesFromFrequency2
 import helperFunctions
-from UserStory import UserStory
-from other.classRules import Extraction
 import algorithm
+
 
 
 
 if __name__ == '__main__':
 
     # variables
-    file = helperFunctions.getFile ()
+    file = helperFunctions.getFile ("userStories/text.txt")
     sentences = helperFunctions.getSentencesFromFile ( file )
-    sentences = helperFunctions.preprocess ( sentences )
+    sentences = algorithm.preprocess1 ( sentences )
 
     sentences2 = ' '.join ( sentences )
     print ( sentences2 )
@@ -55,57 +49,21 @@ if __name__ == '__main__':
     print ( "nouns and verbs:", algorithm.nounsAndVerbs )
     print ( "stopwords found : ", algorithm.stopwordsFound )
     print ( "concepts before :", algorithm.conceptList )
-    # storing concepts InFormOftokens
-    concepts_Tokens = [ ]
-    # find concepts from noun phrases
-    i = 0
 
-    for nounphrase in algorithm.noun_phrases:
-
-        np = helperFunctions.nlp ( nounphrase )
-        stringNP = ""
-        for doc in np:
-            if not doc.is_stop and not doc.is_space:
-                if (doc.pos_ == "NOUN" or doc.pos_ == "PROPN"):
-                    stringNP += doc.lemma_.lower ()
-                    concepts_Tokens.append ( doc )
-
-        i = i + 1
-        algorithm.conceptList.append ( stringNP )
-    # removing duplicates
-    algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
-    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
-    print ( "concept tokens ", concepts_Tokens )
-
-    # to get other forms of noun phrases
-    matcher = Matcher ( helperFunctions.nlp.vocab )
-    pattern0 = [ {"POS": "NOUN"}, {"POS": "ADP"}, {"POS": "NOUN"} ]
-    matcher.add ( "noun_det_noun", [ pattern0 ] )
-    for sent in listOfSentences:
-        sentencenlp = helperFunctions.nlp ( sent )
-        matches = matcher ( sentencenlp )
-        for match_id, start, end in matches:
-            string_id = helperFunctions.nlp.vocab.strings [ match_id ]  # Get string representation
-            span = sentencenlp [ start:end ]  # The matched span
-            # add to concept list
-            algorithm.conceptList.append ( span.text )
-            concepts_Tokens.append ( span )
-
-    # removing duplicates
-    algorithm.conceptList = list ( dict.fromkeys ( algorithm.conceptList ) )
-    concepts_Tokens = list ( dict.fromkeys ( concepts_Tokens ) )
+    concepts_Tokens= algorithm.concept ( listOfSentences )
 
     print ( "conceptList:", algorithm.conceptList )
     print ( "concept tokens:", concepts_Tokens )
     algorithm.findGeneralization ()
     print ( "generalization list :: ", algorithm.generalizationList.items () )
-    algorithm.crule2 ()
+    algorithm.extractClassByRules ()
     getClassesFromFrequency2 ( algorithm.sentencesWithoutSW.values () )
 
     print ( "concept list : ", algorithm.conceptList )
 
     algorithm.ExtractAttributes ( sentences2 )
     algorithm.ExtractMethods ( sentences2 )
+    print(algorithm.methodsClasses)
 
     algorithm.ExtractInheritanceR ( sentences2 )
     algorithm.ExtractAggregationR ( sentences2 )
@@ -124,6 +82,8 @@ if __name__ == '__main__':
 
     os.system ( "pip install plantuml" )
     classModel = plantUML.ClassModel ( filename )
+
+
     #adding classes and attributes to model
     for classVar in algorithm.classes:
         classEntity = ClassEntity ( classVar )
