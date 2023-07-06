@@ -23,7 +23,8 @@ AggRelations = {}
 ComposRelations = {}
 methodsClasses = {}
 
-
+posAcceptedForClass = [ "NOUN", "PROPN" ,"INTJ"]
+depAcceptedForClass = [ "compound", "nsubj","nsubjpass" ,"dobj","pobj"]
 def preprocess(text):
     if not text.endswith ( "." ):
         text += "."
@@ -224,8 +225,9 @@ def findGeneralization():
             wordshyponyms [ concept ] = hyponyms
 
             # wordes having same meaning
-    print ( "synonyms of ", conceptList [ 0 ], wordsSynonyms [ conceptList [ 0 ] ] )
-    print ( "hypo of ", conceptList [ 0 ], wordshyponyms [ conceptList [ 0 ] ] )
+    if conceptList[0]  in  wordsSynonyms.keys():
+        print ( "synonyms of ", conceptList [ 0 ], wordsSynonyms [ conceptList [ 0 ] ] )
+        print ( "hypo of ", conceptList [ 0 ], wordshyponyms [ conceptList [ 0 ] ] )
 
     # words having is a relationship
     for outIndex, ct1 in enumerate ( conceptList ):
@@ -458,12 +460,16 @@ def ExtractAttributes(sentences):
                     break
     """
 
-
+WORDSNOTCLASS = [ "organization","part", "date", "number", "database", "record", "information", "detail",
+                      "website", "computer", "type", "number", "date", "reference", "no", "code", "volume", "birth",
+                      "id", "address", "name", "list", "attribute" ]
 # extract inheritance relation from previously specified patterns .
 def ExtractInheritanceR(sentences):
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     print ( "in ExtractInheritanceR():" )
     global IRelations
+    global  WORDSNOTCLASS
+    global posAcceptedForClass
 
     matcher = Matcher ( helperFunctions.nlp.vocab )
     # patterns
@@ -471,36 +477,37 @@ def ExtractInheritanceR(sentences):
     # uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
     AUX = [ "are", "is" ]
     TYPEWORD = [ "types", "type" ]
-    inherRp1 = [ {"POS": "NOUN", "DEP": "nsubj", "LOWER": {"IN": TYPEWORD}}, {"POS": "ADP", "DEP": "prep"},
-                 {"POS": "NOUN", "DEP": "pobj"},
+    inherRp1 = [ {"POS": {"IN": posAcceptedForClass} , "DEP": "nsubj", "LOWER": {"IN": TYPEWORD}}, {"POS": "ADP", "DEP": "prep"},
+                 {"POS": "NOUN", "DEP": "pobj" ,"LOWER":{"NOT_IN": WORDSNOTCLASS }},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
-                 {"OP": "*"}
+                 {"OP": "*" ,"LOWER":{"NOT_IN": WORDSNOTCLASS }}
                  ]
 
     # pattern 2 :  x is a xxx
-    inherRp2 = [ {"POS": "NOUN", "DEP": "nsubj"},
+    inherRp2 = [ {"OP":"*"},
+                 {"POS": {"IN": posAcceptedForClass} , "DEP": "nsubj" ,"LOWER":{"NOT_IN": WORDSNOTCLASS } },
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
                  {"LOWER": "either", "OP": "*"},
-                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]}},
-                 {"POS": "NOUN"}
+                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]} , "OP":"*"},
+                 {"POS": "NOUN","LOWER":{"NOT_IN": WORDSNOTCLASS }  },
+                 {"OP": "*"}
                  ]
 
     # pattern 3 :  .... could be a .... or ...
-    inherRp3 = [ {"POS": "NOUN", "DEP": "nsubj"},
+    inherRp3 = [ { "POS": {"IN": posAcceptedForClass}, "DEP": "nsubj", "LOWER":{"NOT_IN": WORDSNOTCLASS }},
                  {"POS": "AUX", "DEP": "aux", "LOWER": {"IN": [ "may", "can", "could", "might" ]}},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": "be"},
-                 {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]}},
-                 {"POS": "NOUN"}, {"OP": "*"}
+                 {"POS": "NOUN","LOWER":{"NOT_IN": WORDSNOTCLASS }}, {"OP": "*"}
                  ]
 
     # pattern 4 :  .... is a subclass of ....
-    inherRp4 = [ {"POS": "NOUN", "DEP": "nsubj"},
+    inherRp4 = [ {"POS": {"IN": posAcceptedForClass}, "DEP": "nsubj","LOWER":{"NOT_IN": WORDSNOTCLASS }},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
-                 {"POS": "DET", "DEP": "det", "LOWER": "a"},
-                 {"LOWER": "subclass", "DEP": "compound"},
+                 {"POS": "DET", "DEP": "det", "LOWER": "a" , "OP":"*"},
+                 {"LOWER": "sub", "DEP": "compound"},
                  {"POS": "NOUN", "DEP": "attr", "LOWER": "class"},
                  {"POS": "ADP", "DEP": "prep", "LOWER": "of"},
-                 {"POS": "NOUN"},
+                 {"POS": "NOUN","LOWER":{"NOT_IN": WORDSNOTCLASS }},
                  {"OP": "*"}
                  ]
 
@@ -580,35 +587,42 @@ def ExtractAggregationR(sentences):
     print ( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" )
     print ( "in ExtractAggregationR():" )
     global AggRelations
+    global  WORDSNOTCLASS
+    global posAcceptedForClass
+    global depAcceptedForClass
+
 
     matcher = Matcher ( helperFunctions.nlp.vocab )
     # patterns
     # aggregation pattern 1 : there are xxxxx in a xxxxxx
     AUX = [ "are", "is" ]
     TYPEWORD = [ "types", "type" ]
-    aggRp1 = [ {"POS": "PRON", "DEP": "expl"}, {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": AUX}},
-               {"POS": "NOUN"},
+    aggRp1 = [
+        {"POS": "PRON", "DEP": "expl"},
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": AUX}},
+               {"POS":  {"IN": posAcceptedForClass}},
                {"POS": "ADP", "DEP": "prep", "LOWER": "in"},
                {"OP": "*"}
                ]
 
     # aggregation pattern 2 : x has/have y . where x and y are both classes . x have instance of y
+
     aggRp2 = [
         {"POS": "DET ", "DEP": "det", "OP": "*"},
-        {"POS": "NOUN", "DEP": "nsubj"},
-        {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": [ "has", "have" ]}},
+        {"POS": {"IN": posAcceptedForClass}, "DEP": {"IN": depAcceptedForClass} , "OP":"*" },
+        {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": [ "has", "have" ]} },
         {"OP": "*"}
     ]
     # aggregation pattern 3 : x comprise /involve y
     verbsInvolve = [ "comprise", "involve", "carry", "hold", "embrace" ]
     aggRp3 = [
-        {"POS": "NOUN", "DEP": "nsubj"},
+        {"POS": {"IN": posAcceptedForClass}, "DEP": {"IN": depAcceptedForClass}},
         {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": verbsInvolve}},
-        {"POS": "NOUN"}, {"OP": "*"}
+        {"POS": {"IN": posAcceptedForClass}}, {"OP": "*"}
     ]
     # aggregation pattern 4 : x is made up of/by  y
     aggRp4 = [
-        {"POS": "NOUN"},
+        {"POS": {"IN": posAcceptedForClass}, "DEP": {"IN": depAcceptedForClass},"OP":"*"},
         {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": [ "is", "are" ]}},
         {"POS": "VERB", "DEP": "ROOT", "LOWER": "made"},
         {"POS": "ADP", "DEP": "prt", "LOWER": "up"},
@@ -620,11 +634,11 @@ def ExtractAggregationR(sentences):
     verbDivdedSyn = [ "divided", "cut", "separated", "splitted", "craved", "fractioned", "subdivided" ]
     aggRp5 = [
         {"POS": "DET ", "DEP": "det", "OP": "*"},
-        {"POS": "NOUN", "DEP": "nsubjpass"},
+        {"POS": {"IN": posAcceptedForClass}, "DEP": {"IN": depAcceptedForClass},"OP":"*"},
         {"POS": "AUX", "DEP": "auxpass", "LOWER": {"IN": [ "is", "are" ]}},
         {"POS": "VERB", "DEP": "ROOT", "LOWER": "divided"},
         {"POS": "ADP", "DEP": "prep", "LOWER": "into", "OP": "*"},
-        {"POS": "NOUN"}, {"OP": "*"}
+        {"POS": {"IN": posAcceptedForClass}}, {"OP": "*"}
     ]
 
     matcher.add ( "aggregationRelationPattern1", [ aggRp1 ], greedy="LONGEST" )
@@ -654,15 +668,17 @@ def ExtractAggregationR(sentences):
                     elif token.pos_ == "NOUN" and token.dep_ == "pobj":
                         classIs = token.lemma_.lower ()
                 elif string_id == "aggregationRelationPattern2":
-                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "conj"):
+                    if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "conj" ):
                         rels.append ( token.lemma_.lower () )
-                    elif token.pos_ == "NOUN" and token.dep_ == "nsubj":
+                        continue
+                    elif (token.pos_ == "NOUN" or token.pos_=="INTJ") and token.dep_ == "nsubj":
                         classIs = token.lemma_.lower ()
                     for x in span.noun_chunks:
                         if x.text.lower () == classIs:
                             continue
-                        text = "".join ( x.lemma_.lower () )
-                        rels.append ( text.lower () )
+                        if x.text not in rels:
+                            text = "".join ( x.lemma_.lower () )
+                            rels.append ( text.lower () )
                 elif string_id == "aggregationRelationPattern3":
                     if token.pos_ == "NOUN" and (token.dep_ == "dobj" or token.dep_ == "conj"):
                         rels.append ( token.lemma_.lower () )
@@ -910,8 +926,6 @@ def ExtractMethods(sentences):
         methods.append ( method )
         if classIs== "" or classIs== " ":
             continue
-
-
 
         if classIs != "" and isTruePerson != True:
             try:

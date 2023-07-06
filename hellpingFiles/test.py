@@ -68,7 +68,7 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="Details about customer are identifier,first name ,last name , address."
+    sentence="natural_product is product . industrial product is product ."
     sentence2="Member want to look up books by title."
 
 

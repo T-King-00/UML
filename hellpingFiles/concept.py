@@ -160,7 +160,7 @@ def getClassesFromFrequency2(sentences):
     classFoundFromFreq = [ ]
     for key in wordsinDoc:
         freq = wordsinDoc [ key ] / countOfWords
-        WORDSNOTCLASS=["organization","able","date","number","database", "record", "information", "detail", "website", "computer","type", "number", "date", "reference","no","code","volume","birth","id","address","name","list"]
+        WORDSNOTCLASS=["organization","able","date","number","database", "record", "information", "detail", "website", "computer","type", "number", "date", "reference","no","code","volume","birth","id","address","name","list","attribute"]
         frequency [ key ] = freq
         if frequency [ key ] >= 0.02:
             keyNlp = helperFunctions.nlp ( key )

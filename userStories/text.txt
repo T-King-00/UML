@@ -1,6 +1,19 @@
-System has customer.
-there are products in an order.
-Every Customer has a web user .
-web user can make orders.
-payment is part of order .
-Details about customer are identifier, first name , last name , address.
+System has customers and inventory .
+inventory contains products.
+Details about customer are phone and email and address ,identifier, first name , last name .
+A product contains identifier , name , supplier , price.
+Shopping cart includes creation date , products  .
+Details about shopping cart are creation date.
+payment contains date , total price , payment method .
+customer can login .
+customer can register in system.
+consumer product is product .
+clothes is product .
+Electronics is a product .
+natural_product is product .
+customer has shopping cart.
+Order carry products .
+Payment is part of order.
+Payment include identifier , paid date , total price,details.
+Order can be new , hold , shipped , delivered , closed.
+Customer state can be New,Active , Block , Ban.
