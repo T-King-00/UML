@@ -68,7 +68,7 @@ def findSynonyms(word):
 
 if __name__ == '__main__':
 
-    sentence="natural_product is product . industrial product is product ."
+    sentence="john is name ."
     sentence2="Member want to look up books by title."
 
 
@@ -76,8 +76,8 @@ if __name__ == '__main__':
 
 
     for word in sent:
-        print(word.text,"  : "  , word.pos_,word.dep_, word.is_stop,"  :  " ,word.tag_,word.ent_type_)
-    findSynonyms("composed")
+        print( word.text,"  : ", word.pos_, word.dep_, word.is_stop,"  :  ", word.tag_, word.ent_type_, word.ent_type)
+    findSynonyms("co")
     for x in findSynonyms("composed"):
         x=helperFunctions.nlp(x)
         print(x)

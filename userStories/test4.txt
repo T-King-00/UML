@@ -1,0 +1,18 @@
+A library issues loan items to customers.Each customer is
+konwn as a member and is issued a membership card that shows a unique
+member number. Details about customer are the membership number ,a name, address, and date of birth.
+The library is made up of a number of subject sections.
+Each section is described by a classification mark. A loan item is uniquely
+identified by a bar code.
+There are two types of loan items, language tapes and books. A language tape
+has a title language (e.g. French), and level (e.g.beginner).
+A book has  title, author. A customer may borrow up to a maximum of 8
+items at one time.
+An item can be borrowed, reserved or renewed to extend a current loan. When
+an item is issued the customer's membership number
+is scanned via a bar code reader or entered manually. If the membership is still
+valid and the number of loan items
+less than 8, the book bar code is read, either via the bar code reader or entered
+manually. If the item can be
+issued (e.g. not reserved) the item is stamped and then issued. The library must
+support the facility for an item to be searched and for a daily update of records.

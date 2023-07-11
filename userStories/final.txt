@@ -1,0 +1,5 @@
+Customer have order.
+Order Detail is made up of item.
+Details about item are weight and description .
+Payment is part of order .
+Type of Payment are Cash , credit , check , wire_Transfer.

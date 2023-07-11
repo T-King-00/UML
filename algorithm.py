@@ -306,8 +306,9 @@ def ExtractAttributes(sentences):
               {"POS": "AUX", "LOWER": {"IN": AUX}}, {"OP": "+"} ]
 
     # attribute pattern 2 : A ... is identified with .... , ..... .
-    attp2Verbs = [ "identified", "known", "represented", "denoted", "described" ]
+    attp2Verbs = [ "identified", "known", "represented", "denoted", "described","denoted" ]
     attp2 = [ {"POS": "DET"}, {"POS": "NOUN"}, {"POS": "AUX", "LOWER": {"IN": AUX}},
+              {"LOWER":"uniquely" , "OP":"*"},
               {"POS": "VERB", "DEP": "ROOT", "LOWER": {"IN": attp2Verbs}}, {"POS": "ADP"},
               {"OP": "+"} ]
 
@@ -477,7 +478,7 @@ def ExtractInheritanceR(sentences):
     # uniqueSyn = [ "different", "alone", "unique", "unequaled", "unequalled", "unparalleled", "singular" ]
     AUX = [ "are", "is" ]
     TYPEWORD = [ "types", "type" ]
-    inherRp1 = [ {"POS": {"IN": posAcceptedForClass} , "DEP": "nsubj", "LOWER": {"IN": TYPEWORD}}, {"POS": "ADP", "DEP": "prep"},
+    inherRp1 = [  {"LOWER": {"IN": TYPEWORD}} , {"POS": "ADP", "DEP": "prep"},
                  {"POS": "NOUN", "DEP": "pobj" ,"LOWER":{"NOT_IN": WORDSNOTCLASS }},
                  {"POS": "AUX", "DEP": "ROOT", "LOWER": {"IN": AUX}},
                  {"OP": "*" ,"LOWER":{"NOT_IN": WORDSNOTCLASS }}
@@ -486,7 +487,7 @@ def ExtractInheritanceR(sentences):
     # pattern 2 :  x is a xxx
     inherRp2 = [ {"OP":"*"},
                  {"POS": {"IN": posAcceptedForClass} , "DEP": "nsubj" ,"LOWER":{"NOT_IN": WORDSNOTCLASS } },
-                 {"POS": "AUX", "DEP": "ROOT", "LOWER": "is"},
+                 {"POS": "AUX", "DEP": "ROOT"},
                  {"LOWER": "either", "OP": "*"},
                  {"POS": "DET", "DEP": "det", "LOWER": {"IN": [ "a", "an" ]} , "OP":"*"},
                  {"POS": "NOUN","LOWER":{"NOT_IN": WORDSNOTCLASS }  },
@@ -631,7 +632,7 @@ def ExtractAggregationR(sentences):
     ]
 
     # aggregation pattern 5 : x is/are divded into/to made up of/by  y
-    verbDivdedSyn = [ "divided", "cut", "separated", "splitted", "craved", "fractioned", "subdivided" ]
+    verbDivdedSyn =  [ "divided", "cut", "separated", "splitted", "craved", "fractioned", "subdivided" ]
     aggRp5 = [
         {"POS": "DET ", "DEP": "det", "OP": "*"},
         {"POS": {"IN": posAcceptedForClass}, "DEP": {"IN": depAcceptedForClass},"OP":"*"},
@@ -912,11 +913,11 @@ def ExtractMethods(sentences):
             print ( "object dependents", object_dependents_Txt )
             if len ( object_dependents ):
                 if object_dependents_Txt [ 0 ] != "to":
-                    method = verb.text + " " + object [ 0 ].text + ' ' + " ".join ( object_dependents_Txt )
+                    method = verb.lemma_ + " " + object [ 0 ].text + ' ' + " ".join ( object_dependents_Txt )
                 else:
-                    method = verb.text + " " + object [ 0 ].text
+                    method = verb.lemma_ + " " + object [ 0 ].text
             else:
-                method = verb.text + " " + object [ 0 ].text
+                method = verb.lemma_ + " " + object [ 0 ].text
 
         else:
             method = verb.text

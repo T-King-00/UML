@@ -12,13 +12,11 @@ import uuid
 if __name__ == '__main__':
 
     # variables
-    file = helperFunctions.getFile ("userStories/text.txt")
+    file = helperFunctions.getFile ("userStories/final.txt")
     sentences = helperFunctions.getSentencesFromFile ( file )
     sentences = algorithm.preprocess1 ( sentences )
-
     sentences2 = ' '.join ( sentences )
     print ( sentences2 )
-
     sentences3 = algorithm.preprocess ( sentences2 )
     print ( sentences3 )
 
